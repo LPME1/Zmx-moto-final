@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Bike, Calendar, Shield, Wrench, Zap, ChevronLeft, CheckCircle, AlertCircle } from 'lucide-react';
+import { Bike, Calendar, Shield, Wrench, Zap, ChevronLeft, CircleCheck as CheckCircle, CircleAlert as AlertCircle } from 'lucide-react';
 import BookingCalendar from '../components/BookingCalendar';
 import StructuredData from '../components/StructuredData';
 
