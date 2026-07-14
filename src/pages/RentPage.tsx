@@ -55,6 +55,65 @@ export default function RentPage() {
           </div>
 
           <div className="mb-20">
+            <h2 className="text-5xl font-display uppercase text-center mb-12">Notre <span className="text-zmx-gold">flotte</span></h2>
+            <div className="grid md:grid-cols-3 gap-8 mb-20">
+              <div className="glass-card border border-zmx-gold/30 rounded-2xl overflow-hidden group hover:border-zmx-gold/70 transition-all duration-300">
+                <div className="relative overflow-hidden h-56">
+                  <img
+                    src="/gemini-2.5-flash-image-preview_Electric_dirt_bike_Stark_Varg_black_background_golden_lighting_studio-grade_product_shot-2.jpg"
+                    alt="Stark VARG EX"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-zmx-black/80 to-transparent" />
+                  <span className="absolute bottom-3 left-4 text-xs font-bold uppercase tracking-widest text-zmx-gold bg-zmx-black/60 px-3 py-1 rounded-full">Électrique</span>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-2xl font-display uppercase mb-2">Stark VARG <span className="text-zmx-gold">EX</span></h3>
+                  <p className="text-zmx-gray text-sm mb-4">La référence de la compétition électrique. Puissance et précision pour rider à son niveau.</p>
+                  <button onClick={() => setShowCalendar(true)} className="w-full bg-zmx-gold text-zmx-black py-3 font-bold uppercase hover:bg-white transition rounded-xl text-sm">Réserver</button>
+                </div>
+              </div>
+
+              <div className="glass-card border border-zmx-gold/30 rounded-2xl overflow-hidden group hover:border-zmx-gold/70 transition-all duration-300">
+                <div className="relative overflow-hidden h-56">
+                  <img
+                    src="/electric-motocross-rider-jumping.jpg"
+                    alt="MX électrique"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-zmx-black/80 to-transparent" />
+                  <span className="absolute bottom-3 left-4 text-xs font-bold uppercase tracking-widest text-zmx-gold bg-zmx-black/60 px-3 py-1 rounded-full">Électrique</span>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-2xl font-display uppercase mb-2">MX <span className="text-zmx-gold">électrique</span></h3>
+                  <p className="text-zmx-gray text-sm mb-4">Idéale pour le circuit MX. Accessible, maniable, et puissante pour progresser.</p>
+                  <button onClick={() => setShowCalendar(true)} className="w-full bg-zmx-gold text-zmx-black py-3 font-bold uppercase hover:bg-white transition rounded-xl text-sm">Réserver</button>
+                </div>
+              </div>
+
+              <div className="glass-card border border-zmx-gold/30 rounded-2xl overflow-hidden group hover:border-zmx-gold/70 transition-all duration-300">
+                <div className="relative overflow-hidden h-56">
+                  <img
+                    src="https://images.pexels.com/photos/163210/motocross-sport-moto-rider-163210.jpeg"
+                    alt="Torrot MX électrique"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-zmx-black/80 to-transparent" />
+                  <span className="absolute bottom-3 left-4 text-xs font-bold uppercase tracking-widest text-zmx-gold bg-zmx-black/60 px-3 py-1 rounded-full">Électrique</span>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-2xl font-display uppercase mb-2">Torrot <span className="text-zmx-gold">MX</span></h3>
+                  <p className="text-zmx-gray text-sm mb-4">La Torrot MX : légère, efficace, parfaite pour débuter ou rider en famille sur le circuit.</p>
+                  <a href="https://torrot.com/en/torrot-rent" target="_blank" rel="noopener noreferrer" className="block w-full text-center bg-zmx-gold text-zmx-black py-3 font-bold uppercase hover:bg-white transition rounded-xl text-sm">Louer une Torrot</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mb-20">
             <h2 className="text-5xl font-display uppercase text-center mb-12">Ce que vous <span className="text-zmx-gold">gagnez</span></h2>
             <div className="grid md:grid-cols-3 gap-8">
               {[
