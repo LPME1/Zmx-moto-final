@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Zap, ChevronLeft, Users, MapPin, Sparkles, Trophy, Heart, Gift } from 'lucide-react';
+import StructuredData from '../components/StructuredData';
 
 export default function EventPage() {
   useEffect(() => {
@@ -7,13 +8,12 @@ export default function EventPage() {
     script.src = 'https://assets.calendly.com/assets/external/widget.js';
     script.async = true;
     document.body.appendChild(script);
-    return () => {
-      document.body.removeChild(script);
-    };
+    return () => { document.body.removeChild(script); };
   }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-zmx-black to-gray-900 text-white">
+      <StructuredData type="event" />
       <nav className="fixed top-0 w-full z-50 glass-effect border-b border-zmx-gold/20">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <a href="/" className="flex items-center gap-2">
@@ -41,9 +41,10 @@ export default function EventPage() {
           <div className="grid md:grid-cols-2 gap-12 mb-20">
             <div>
               <img
-                src="/two-riders-sunset.jpg"
-                alt="Événement ZMX"
-                className="w-full h-96 object-cover border-4 border-zmx-gold"
+                src="https://images.pexels.com/photos/2422249/pexels-photo-2422249.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop"
+                alt="Événement ZMX autour de la moto électrique"
+                className="w-full h-96 object-cover border-4 border-zmx-gold rounded-2xl"
+                loading="lazy"
               />
             </div>
             <div className="flex flex-col justify-center">
@@ -60,7 +61,7 @@ export default function EventPage() {
               </p>
               <a
                 href="#contact"
-                className="bg-zmx-gold text-zmx-black px-8 py-4 font-bold text-xl uppercase hover:bg-white transition self-start"
+                className="bg-zmx-gold text-zmx-black px-8 py-4 font-bold text-xl uppercase hover:bg-white transition self-start rounded-xl"
               >
                 Demander un devis
               </a>
@@ -72,37 +73,18 @@ export default function EventPage() {
               Types d'<span className="text-zmx-gold">événements</span>
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              <div className="glass-effect border border-zmx-gold/30 p-8 text-center hover:border-zmx-gold transition">
-                <Gift className="w-12 h-12 text-zmx-gold mx-auto mb-4" />
-                <h3 className="text-2xl font-display uppercase mb-4">Séminaires</h3>
-                <p className="text-zmx-gray">
-                  Team building et renforcement d'équipe autour d'une activité originale et fédératrice
-                </p>
-              </div>
-
-              <div className="glass-effect border border-zmx-gold/30 p-8 text-center hover:border-zmx-gold transition">
-                <Heart className="w-12 h-12 text-zmx-gold mx-auto mb-4" />
-                <h3 className="text-2xl font-display uppercase mb-4">Enterrements de vie</h3>
-                <p className="text-zmx-gray">
-                  EVJF/EVJG inoubliables avec sensations garanties pour célébrer entre amis
-                </p>
-              </div>
-
-              <div className="glass-effect border border-zmx-gold/30 p-8 text-center hover:border-zmx-gold transition">
-                <Trophy className="w-12 h-12 text-zmx-gold mx-auto mb-4" />
-                <h3 className="text-2xl font-display uppercase mb-4">Compétitions</h3>
-                <p className="text-zmx-gray">
-                  Organisation de courses et challenges personnalisés pour vos groupes
-                </p>
-              </div>
-
-              <div className="glass-effect border border-zmx-gold/30 p-8 text-center hover:border-zmx-gold transition">
-                <Sparkles className="w-12 h-12 text-zmx-gold mx-auto mb-4" />
-                <h3 className="text-2xl font-display uppercase mb-4">Événements privés</h3>
-                <p className="text-zmx-gray">
-                  Anniversaires, fêtes familiales, ou tout événement spécial à célébrer
-                </p>
-              </div>
+              {[
+                { icon: Gift, title: 'Séminaires', desc: "Team building et renforcement d'équipe autour d'une activité originale" },
+                { icon: Heart, title: 'Enterrements de vie', desc: 'EVJF/EVJG inoubliables avec sensations garanties' },
+                { icon: Trophy, title: 'Compétitions', desc: 'Organisation de courses et challenges personnalisés' },
+                { icon: Sparkles, title: 'Événements privés', desc: 'Anniversaires, fêtes familiales, ou tout événement spécial' },
+              ].map((item) => (
+                <div key={item.title} className="glass-card border border-zmx-gold/30 p-8 text-center hover:border-zmx-gold transition rounded-2xl">
+                  <item.icon className="w-12 h-12 text-zmx-gold mx-auto mb-4" />
+                  <h3 className="text-2xl font-display uppercase mb-4">{item.title}</h3>
+                  <p className="text-zmx-gray">{item.desc}</p>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -111,7 +93,7 @@ export default function EventPage() {
               Nos <span className="text-zmx-gold">services</span>
             </h2>
             <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-              <div className="glass-effect border-l-4 border-zmx-gold p-8">
+              <div className="glass-card border-l-4 border-zmx-gold p-8 rounded-2xl">
                 <MapPin className="w-10 h-10 text-zmx-gold mb-4" />
                 <h3 className="text-2xl font-display uppercase mb-4">Sur nos circuits</h3>
                 <ul className="space-y-3 text-zmx-gray">
@@ -122,8 +104,7 @@ export default function EventPage() {
                   <li>✓ Possibilité de restauration sur place</li>
                 </ul>
               </div>
-
-              <div className="glass-effect border-l-4 border-zmx-gold p-8">
+              <div className="glass-card border-l-4 border-zmx-gold p-8 rounded-2xl">
                 <Sparkles className="w-10 h-10 text-zmx-gold mb-4" />
                 <h3 className="text-2xl font-display uppercase mb-4">Déplacement sur site</h3>
                 <ul className="space-y-3 text-zmx-gray">
@@ -142,49 +123,21 @@ export default function EventPage() {
               Pourquoi choisir <span className="text-zmx-gold">ZMX Event</span> ?
             </h2>
             <div className="grid md:grid-cols-3 gap-8">
-              <div className="glass-effect border border-zmx-gold/30 p-8">
-                <Users className="w-12 h-12 text-zmx-gold mb-4" />
-                <h3 className="text-2xl font-display uppercase mb-4">Sur mesure</h3>
-                <p className="text-zmx-gray">
-                  Chaque événement est unique. Nous adaptons notre offre à vos besoins spécifiques,
-                  votre budget et vos objectifs.
-                </p>
-              </div>
-
-              <div className="glass-effect border border-zmx-gold/30 p-8">
-                <Zap className="w-12 h-12 text-zmx-gold mb-4" />
-                <h3 className="text-2xl font-display uppercase mb-4">Expérience unique</h3>
-                <p className="text-zmx-gray">
-                  L'électrique offre une expérience moderne et accessible à tous les niveaux,
-                  pour un événement vraiment différent.
-                </p>
-              </div>
-
-              <div className="glass-effect border border-zmx-gold/30 p-8">
-                <Trophy className="w-12 h-12 text-zmx-gold mb-4" />
-                <h3 className="text-2xl font-display uppercase mb-4">Professionnel</h3>
-                <p className="text-zmx-gray">
-                  Équipe expérimentée, matériel de qualité et respect des normes de sécurité
-                  pour un événement réussi.
-                </p>
-              </div>
+              {[
+                { icon: Users, title: 'Sur mesure', desc: "Chaque événement est unique. Nous adaptons notre offre à vos besoins, budget et objectifs." },
+                { icon: Zap, title: 'Expérience unique', desc: "L'électrique offre une expérience moderne et accessible à tous les niveaux." },
+                { icon: Trophy, title: 'Professionnel', desc: 'Équipe expérimentée, matériel de qualité et respect des normes de sécurité.' },
+              ].map((item) => (
+                <div key={item.title} className="glass-card border border-zmx-gold/30 p-8 rounded-2xl">
+                  <item.icon className="w-12 h-12 text-zmx-gold mb-4" />
+                  <h3 className="text-2xl font-display uppercase mb-4">{item.title}</h3>
+                  <p className="text-zmx-gray">{item.desc}</p>
+                </div>
+              ))}
             </div>
           </div>
 
-          <div className="mb-20">
-            <h2 className="text-5xl font-display uppercase text-center mb-12">
-              RÉSERVEZ VOTRE <span className="text-zmx-gold">ÉVÉNEMENT</span>
-            </h2>
-            <div className="max-w-5xl mx-auto">
-              <div
-                className="calendly-inline-widget"
-                data-url="https://calendly.com/zelectronsmx"
-                style={{ minWidth: '320px', height: '700px' }}
-              ></div>
-            </div>
-          </div>
-
-          <div id="contact" className="glass-effect border-2 border-zmx-gold p-12">
+          <div id="contact" className="glass-effect border-2 border-zmx-gold p-12 rounded-2xl">
             <h2 className="text-5xl font-display uppercase text-center mb-8">
               Demandez votre <span className="text-zmx-gold">offre sur mesure</span>
             </h2>
@@ -194,32 +147,14 @@ export default function EventPage() {
 
             <form className="max-w-3xl mx-auto space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
-                <input
-                  type="text"
-                  placeholder="Nom de l'entreprise / Organisation"
-                  className="w-full bg-white/10 border border-zmx-gold/30 px-4 py-3 text-white placeholder-zmx-gray focus:border-zmx-gold focus:outline-none"
-                />
-                <input
-                  type="text"
-                  placeholder="Nom du contact"
-                  className="w-full bg-white/10 border border-zmx-gold/30 px-4 py-3 text-white placeholder-zmx-gray focus:border-zmx-gold focus:outline-none"
-                />
+                <input type="text" placeholder="Nom de l'entreprise / Organisation" className="w-full bg-white/10 border border-zmx-gold/30 px-4 py-3 text-white placeholder-zmx-gray focus:border-zmx-gold focus:outline-none rounded-xl" />
+                <input type="text" placeholder="Nom du contact" className="w-full bg-white/10 border border-zmx-gold/30 px-4 py-3 text-white placeholder-zmx-gray focus:border-zmx-gold focus:outline-none rounded-xl" />
               </div>
-
               <div className="grid md:grid-cols-2 gap-6">
-                <input
-                  type="email"
-                  placeholder="Email"
-                  className="w-full bg-white/10 border border-zmx-gold/30 px-4 py-3 text-white placeholder-zmx-gray focus:border-zmx-gold focus:outline-none"
-                />
-                <input
-                  type="tel"
-                  placeholder="Téléphone"
-                  className="w-full bg-white/10 border border-zmx-gold/30 px-4 py-3 text-white placeholder-zmx-gray focus:border-zmx-gold focus:outline-none"
-                />
+                <input type="email" placeholder="Email" className="w-full bg-white/10 border border-zmx-gold/30 px-4 py-3 text-white placeholder-zmx-gray focus:border-zmx-gold focus:outline-none rounded-xl" />
+                <input type="tel" placeholder="Téléphone" className="w-full bg-white/10 border border-zmx-gold/30 px-4 py-3 text-white placeholder-zmx-gray focus:border-zmx-gold focus:outline-none rounded-xl" />
               </div>
-
-              <select className="w-full bg-white/10 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none">
+              <select className="w-full bg-white/10 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none rounded-xl">
                 <option value="">Type d'événement</option>
                 <option value="seminaire">Séminaire d'entreprise</option>
                 <option value="evjf">Enterrement de vie</option>
@@ -227,37 +162,18 @@ export default function EventPage() {
                 <option value="anniversaire">Anniversaire</option>
                 <option value="autre">Autre événement privé</option>
               </select>
-
               <div className="grid md:grid-cols-2 gap-6">
-                <input
-                  type="date"
-                  placeholder="Date souhaitée"
-                  className="w-full bg-white/10 border border-zmx-gold/30 px-4 py-3 text-white placeholder-zmx-gray focus:border-zmx-gold focus:outline-none"
-                />
-                <input
-                  type="number"
-                  placeholder="Nombre de participants"
-                  className="w-full bg-white/10 border border-zmx-gold/30 px-4 py-3 text-white placeholder-zmx-gray focus:border-zmx-gold focus:outline-none"
-                />
+                <input type="date" placeholder="Date souhaitée" className="w-full bg-white/10 border border-zmx-gold/30 px-4 py-3 text-white placeholder-zmx-gray focus:border-zmx-gold focus:outline-none rounded-xl" />
+                <input type="number" placeholder="Nombre de participants" className="w-full bg-white/10 border border-zmx-gold/30 px-4 py-3 text-white placeholder-zmx-gray focus:border-zmx-gold focus:outline-none rounded-xl" />
               </div>
-
-              <select className="w-full bg-white/10 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none">
+              <select className="w-full bg-white/10 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none rounded-xl">
                 <option value="">Lieu souhaité</option>
                 <option value="jancigny">Circuit Jancigny</option>
                 <option value="champlitte">Circuit Champlitte</option>
-                <option value="deplacement">Déplacement sur notre site</option>
+                <option value="deplacement">Déplacement sur votre site</option>
               </select>
-
-              <textarea
-                placeholder="Décrivez votre projet en détail"
-                rows={6}
-                className="w-full bg-white/10 border border-zmx-gold/30 px-4 py-3 text-white placeholder-zmx-gray focus:border-zmx-gold focus:outline-none resize-none"
-              ></textarea>
-
-              <button
-                type="submit"
-                className="w-full bg-zmx-gold text-zmx-black px-8 py-4 font-bold uppercase hover:bg-white transition text-xl"
-              >
+              <textarea placeholder="Décrivez votre projet en détail" rows={6} className="w-full bg-white/10 border border-zmx-gold/30 px-4 py-3 text-white placeholder-zmx-gray focus:border-zmx-gold focus:outline-none resize-none rounded-xl"></textarea>
+              <button type="submit" className="w-full bg-zmx-gold text-zmx-black px-8 py-4 font-bold uppercase hover:bg-white transition text-xl rounded-xl">
                 Envoyer ma demande
               </button>
             </form>
@@ -267,7 +183,7 @@ export default function EventPage() {
               <div className="flex flex-wrap justify-center gap-8">
                 <div>
                   <p className="text-zmx-gold font-bold mb-2">Email</p>
-                  <p className="text-white">contact@zmx.fr</p>
+                  <p className="text-white">contact@zmxmoto.fr</p>
                 </div>
                 <div>
                   <p className="text-zmx-gold font-bold mb-2">Téléphone</p>

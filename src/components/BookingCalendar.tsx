@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { X, Calendar, Clock, User, Mail, Phone, MessageSquare } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { supabase, isSupabaseAvailable } from '../lib/supabase';
 
 interface BookingCalendarProps {
   service: 'park' | 'future' | 'rent';
@@ -57,6 +57,12 @@ export default function BookingCalendar({ service, onClose }: BookingCalendarPro
     setIsSubmitting(true);
     setSubmitError('');
 
+    if (!isSupabaseAvailable) {
+      setSubmitError('Service temporairement indisponible. Veuillez nous contacter par téléphone ou email.');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const { error } = await supabase
         .from('bookings')
@@ -78,9 +84,8 @@ export default function BookingCalendar({ service, onClose }: BookingCalendarPro
       setTimeout(() => {
         onClose();
       }, 3000);
-    } catch (error) {
-      setSubmitError('Une erreur est survenue. Veuillez réessayer.');
-      console.error('Booking error:', error);
+    } catch {
+      setSubmitError('Une erreur est survenue. Veuillez réessayer ou nous contacter directement.');
     } finally {
       setIsSubmitting(false);
     }
@@ -94,8 +99,8 @@ export default function BookingCalendar({ service, onClose }: BookingCalendarPro
 
   if (submitSuccess) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-zmx-black/90 backdrop-blur-sm p-6">
-        <div className="glass-effect border-2 border-zmx-gold max-w-md w-full p-8 text-center animate-fade-in">
+      <div className="fixed inset-0 z-[60] flex items-center justify-center bg-zmx-black/90 backdrop-blur-sm p-6">
+        <div className="glass-effect border-2 border-zmx-gold max-w-md w-full p-8 text-center animate-slide-up rounded-2xl">
           <div className="w-20 h-20 bg-zmx-gold rounded-full flex items-center justify-center mx-auto mb-6">
             <svg className="w-12 h-12 text-zmx-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
@@ -114,8 +119,8 @@ export default function BookingCalendar({ service, onClose }: BookingCalendarPro
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-zmx-black/90 backdrop-blur-sm p-6 overflow-y-auto">
-      <div className="glass-effect border-2 border-zmx-gold max-w-2xl w-full my-8 animate-slide-up">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-zmx-black/90 backdrop-blur-sm p-6 overflow-y-auto">
+      <div className="glass-effect border-2 border-zmx-gold max-w-2xl w-full my-8 animate-slide-up rounded-2xl">
         <div className="p-6 border-b border-zmx-gold/30 flex justify-between items-center">
           <h2 className="text-3xl font-display uppercase text-zmx-gold">
             {getServiceTitle()}
@@ -123,6 +128,7 @@ export default function BookingCalendar({ service, onClose }: BookingCalendarPro
           <button
             onClick={onClose}
             className="text-zmx-gray hover:text-zmx-gold transition"
+            aria-label="Fermer"
           >
             <X className="w-8 h-8" />
           </button>
@@ -140,7 +146,7 @@ export default function BookingCalendar({ service, onClose }: BookingCalendarPro
                 required
                 value={formData.customerName}
                 onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
-                className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none"
+                className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none rounded-xl"
                 placeholder="Jean Dupont"
               />
             </div>
@@ -155,7 +161,7 @@ export default function BookingCalendar({ service, onClose }: BookingCalendarPro
                 required
                 value={formData.customerEmail}
                 onChange={(e) => setFormData({ ...formData, customerEmail: e.target.value })}
-                className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none"
+                className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none rounded-xl"
                 placeholder="jean.dupont@email.com"
               />
             </div>
@@ -171,7 +177,7 @@ export default function BookingCalendar({ service, onClose }: BookingCalendarPro
               required
               value={formData.customerPhone}
               onChange={(e) => setFormData({ ...formData, customerPhone: e.target.value })}
-              className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none"
+              className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none rounded-xl"
               placeholder="06 12 34 56 78"
             />
           </div>
@@ -188,7 +194,7 @@ export default function BookingCalendar({ service, onClose }: BookingCalendarPro
                 min={getMinDate()}
                 value={formData.bookingDate}
                 onChange={(e) => setFormData({ ...formData, bookingDate: e.target.value })}
-                className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none"
+                className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none rounded-xl"
               />
             </div>
 
@@ -201,7 +207,7 @@ export default function BookingCalendar({ service, onClose }: BookingCalendarPro
                 required
                 value={formData.bookingTime}
                 onChange={(e) => setFormData({ ...formData, bookingTime: e.target.value })}
-                className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none"
+                className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none rounded-xl"
               >
                 <option value="">Choisir un horaire</option>
                 {timeSlots.map((time) => (
@@ -222,7 +228,7 @@ export default function BookingCalendar({ service, onClose }: BookingCalendarPro
               required
               value={formData.duration}
               onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-              className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none"
+              className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none rounded-xl"
             >
               <option value="">Choisir une durée</option>
               {getDurationOptions().map((duration) => (
@@ -242,13 +248,13 @@ export default function BookingCalendar({ service, onClose }: BookingCalendarPro
               value={formData.notes}
               onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
               rows={4}
-              className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none resize-none"
+              className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none resize-none rounded-xl"
               placeholder="Questions, demandes spéciales..."
             />
           </div>
 
           {submitError && (
-            <div className="bg-red-500/10 border border-red-500 p-4 text-red-400">
+            <div className="bg-red-500/10 border border-red-500 p-4 text-red-400 rounded-xl">
               {submitError}
             </div>
           )}
@@ -257,14 +263,14 @@ export default function BookingCalendar({ service, onClose }: BookingCalendarPro
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 border-2 border-zmx-gold/30 text-white px-6 py-4 font-bold uppercase hover:border-zmx-gold transition"
+              className="flex-1 border-2 border-zmx-gold/30 text-white px-6 py-4 font-bold uppercase hover:border-zmx-gold transition rounded-xl"
             >
               Annuler
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 bg-zmx-gold text-zmx-black px-6 py-4 font-bold uppercase hover:bg-white transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 bg-zmx-gold text-zmx-black px-6 py-4 font-bold uppercase hover:bg-white transition disabled:opacity-50 disabled:cursor-not-allowed rounded-xl"
             >
               {isSubmitting ? 'Envoi...' : 'Confirmer la réservation'}
             </button>

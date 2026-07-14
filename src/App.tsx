@@ -1,501 +1,756 @@
-import { useState, useEffect } from 'react';
-import { Zap, Leaf, Brain, ChevronRight, Star, Calendar, MapPin, Clock } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import {
+  Zap, ChevronRight, Star, MapPin, Clock, Menu, X,
+  Battery, Shield, Wrench, Leaf, VolumeX,
+  UserCheck, ClipboardList, CalendarCheck, Bike,
+  ChevronDown, ArrowRight, Award, Users, Heart
+} from 'lucide-react';
 import StructuredData from './components/StructuredData';
+import BookingCalendar from './components/BookingCalendar';
 
-function App() {
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
+function useScrollReveal() {
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+
+    const elements = document.querySelectorAll('.scroll-reveal');
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+}
+
+function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://assets.calendly.com/assets/external/widget.js';
-    script.async = true;
-    document.body.appendChild(script);
-    return () => {
-      document.body.removeChild(script);
-    };
+    const onScroll = () => setScrolled(window.scrollY > 30);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const testimonials = [
-    {
-      text: "Une expérience incroyable ! Le silence de l'électrique change tout.",
-      author: "Marc D.",
-      rating: 5
-    },
-    {
-      text: "Les coachs sont pros, le terrain est top. Je reviendrai sans hésiter.",
-      author: "Sophie L.",
-      rating: 5
-    },
-    {
-      text: "Première fois en électrique, et quelle sensation ! Plus concentré, plus précis.",
-      author: "Thomas R.",
-      rating: 5
-    }
+  const navLinks = [
+    { label: 'Location', href: '#motos' },
+    { label: 'ZMX Rent', href: '#why-rent' },
+    { label: 'Réserver', href: '#cta' },
+    { label: 'Tarifs', href: '#motos' },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-zmx-black to-gray-900 text-white">
-      <StructuredData type="home" />
-      <nav className="fixed top-0 w-full z-50 glass-effect border-b border-zmx-gold/20">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <img src="/zmx-logo.png" alt="ZMX Team Logo" className="h-16 w-auto" />
-          </div>
-          <div className="hidden md:flex gap-8 font-medium">
-            <a href="#park" className="hover:text-zmx-gold transition">PARK</a>
-            <a href="#future" className="hover:text-zmx-gold transition">FUTURE</a>
-            <a href="#rent" className="hover:text-zmx-gold transition">RENT</a>
-            <a href="#event" className="hover:text-zmx-gold transition">EVENT</a>
-            <a href="#contact" className="hover:text-zmx-gold transition">CONTACT</a>
-          </div>
-          <a href="/park" className="bg-zmx-gold text-zmx-black px-6 py-2 font-bold uppercase hover:bg-white transition">
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${scrolled ? 'glass-effect border-b border-zmx-gold/20 py-2' : 'py-4'}`}>
+      <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+        <a href="/" className="flex items-center gap-2 group">
+          <Zap className="w-8 h-8 text-zmx-gold animate-lightning" />
+          <span className="text-2xl font-display text-zmx-gold tracking-wider">ZMX RENT</span>
+        </a>
+
+        <div className="hidden md:flex gap-8 font-medium items-center">
+          {navLinks.map((link) => (
+            <a key={link.label} href={link.href} className="text-white/80 hover:text-zmx-gold transition relative group">
+              {link.label}
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-zmx-gold group-hover:w-full transition-all duration-300" />
+            </a>
+          ))}
+          <a href="#cta" className="bg-zmx-gold text-zmx-black px-6 py-2.5 font-bold uppercase text-sm hover:bg-white transition rounded-xl">
             Réserver
           </a>
         </div>
-      </nav>
 
-      <header className="relative h-screen flex items-center justify-center overflow-hidden" role="banner">
-        <div className="absolute inset-0">
-          <img
-            src="/two-riders-sunset.jpg"
-            alt="Pilotes de motocross électrique au coucher du soleil"
-            className="w-full h-full object-cover"
-            loading="eager"
-            fetchPriority="high"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-zmx-black/70 via-zmx-black/50 to-zmx-black/80"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-zmx-black/40 to-transparent"></div>
-        </div>
+        <button
+          className="md:hidden text-white"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label="Menu"
+          aria-expanded={mobileOpen}
+        >
+          {mobileOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
+        </button>
+      </div>
 
-        <div className="relative z-10 text-center px-6 max-w-5xl">
-          <div className="mb-6 flex justify-center">
-            <div className="relative">
-              <Zap className="w-24 h-24 text-zmx-gold animate-lightning" />
-              <div className="absolute -inset-4 bg-zmx-gold/20 blur-2xl rounded-full"></div>
-            </div>
-          </div>
-
-          <h1 className="text-7xl md:text-9xl font-display uppercase mb-6 leading-none">
-            <span className="text-white">LE MOTOCROSS</span>
-            <br />
-            <span className="text-zmx-gold">NOUVELLE GÉNÉRATION</span>
-          </h1>
-
-          <p className="text-xl md:text-2xl text-zmx-gray mb-12 font-light tracking-wide">
-            Silencieux, puissant, accessible. À 35 min de Dijon.
-          </p>
-
-          <div className="flex flex-wrap gap-4 justify-center">
-            <a href="/park" className="bg-zmx-gold text-zmx-black px-8 py-4 font-bold uppercase hover:bg-white transition flex items-center gap-2 group">
-              Réserver un créneau
-              <ChevronRight className="group-hover:translate-x-1 transition" />
-            </a>
-            <a href="/future" className="border-2 border-zmx-gold text-zmx-gold px-8 py-4 font-bold uppercase hover:bg-zmx-gold hover:text-zmx-black transition">
-              Découvrir les stages
-            </a>
-            <a href="/rent" className="border-2 border-white text-white px-8 py-4 font-bold uppercase hover:bg-white hover:text-zmx-black transition">
-              Essayer une électrique
+      {mobileOpen && (
+        <div className="md:hidden glass-effect border-t border-zmx-gold/20 mt-2 animate-fade-in">
+          <div className="px-6 py-4 space-y-3">
+            {navLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={() => setMobileOpen(false)}
+                className="block text-white/80 hover:text-zmx-gold transition py-2"
+              >
+                {link.label}
+              </a>
+            ))}
+            <a
+              href="#cta"
+              onClick={() => setMobileOpen(false)}
+              className="block bg-zmx-gold text-zmx-black px-6 py-3 font-bold uppercase text-center rounded-xl"
+            >
+              Réserver
             </a>
           </div>
         </div>
+      )}
+    </nav>
+  );
+}
 
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce" aria-hidden="true">
-          <ChevronRight className="w-8 h-8 text-zmx-gold rotate-90" />
-        </div>
-      </header>
+function Hero({ onReserve }: { onReserve: () => void }) {
+  const heroRef = useRef<HTMLDivElement>(null);
+  const [scrollY, setScrollY] = useState(0);
 
-      <main>
-        <section id="park" className="py-24 bg-gradient-to-b from-gray-900 to-zmx-black" aria-labelledby="univers-heading">
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 id="univers-heading" className="text-5xl md:text-7xl font-display uppercase text-center mb-16">
-            LES UNIVERS <span className="text-zmx-gold">ZMX</span>
-          </h2>
+  useEffect(() => {
+    const onScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <a href="/park" className="group cursor-pointer">
-              <div className="glass-effect border-2 border-zmx-gold/30 overflow-hidden hover:border-zmx-gold transition aspect-square relative">
-                <img
-                  src="/gemini-2.5-flash-image-preview_Top-down_aerial_view_of_MX_SX_circuits_with_spectator_zones_earthy_texture_ZMX_branding-0.jpg"
-                  alt="Vue aérienne du circuit ZMX"
-                  className="absolute inset-0 w-full h-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-zmx-black/90 z-10"></div>
-                <div className="absolute inset-0 bg-zmx-gold/10 group-hover:bg-zmx-gold/20 transition z-10"></div>
-                <div className="relative z-20 h-full flex flex-col justify-end p-8">
-                  <h3 className="text-4xl font-display uppercase text-zmx-gold mb-3 group-hover:text-white transition">
-                    ZMX PARK
-                  </h3>
-                  <p className="text-white text-lg mb-4">Roulage libre sur circuits MX/SX</p>
-                  <div className="flex items-center gap-2 text-zmx-gold group-hover:translate-x-2 transition">
-                    <span className="uppercase font-bold">Découvrir</span>
-                    <ChevronRight />
-                  </div>
-                </div>
-              </div>
-            </a>
+  return (
+    <header ref={heroRef} className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
+      <div className="absolute inset-0" style={{ transform: `translateY(${scrollY * 0.4}px) scale(${1 + scrollY * 0.0003})` }}>
+        <img
+          src="https://images.pexels.com/photos/2078074/pexels-photo-2078074.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop"
+          alt="Location de motos électriques Stark VARG chez ZMX Rent en Bourgogne"
+          className="w-full h-full object-cover"
+          loading="eager"
+          fetchPriority="high"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-zmx-black/80 via-zmx-black/50 to-zmx-black/90" />
+        <div className="absolute inset-0 bg-gradient-to-r from-zmx-black/60 via-transparent to-zmx-black/40" />
+      </div>
 
-            <a href="/future" className="group cursor-pointer">
-              <div className="glass-effect border-2 border-zmx-gold/30 overflow-hidden hover:border-zmx-gold transition aspect-square relative">
-                <img
-                  src="/gemini-2.5-flash-image-preview_Coach_pointing_at_electric_motorbike_rider_trackside_professional_sports_lighting_dans_un_circuit-0.jpg"
-                  alt="Coach avec pilote sur circuit"
-                  className="absolute inset-0 w-full h-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-zmx-black/90 z-10"></div>
-                <div className="absolute inset-0 bg-zmx-gold/10 group-hover:bg-zmx-gold/20 transition z-10"></div>
-                <div className="relative z-20 h-full flex flex-col justify-end p-8">
-                  <h3 className="text-4xl font-display uppercase text-zmx-gold mb-3 group-hover:text-white transition">
-                    ZMX FUTURE
-                  </h3>
-                  <p className="text-white text-lg mb-4">Stages avec coachs professionnels</p>
-                  <div className="flex items-center gap-2 text-zmx-gold group-hover:translate-x-2 transition">
-                    <span className="uppercase font-bold">Découvrir</span>
-                    <ChevronRight />
-                  </div>
-                </div>
-              </div>
-            </a>
-
-            <a href="/rent" className="group cursor-pointer">
-              <div className="glass-effect border-2 border-zmx-gold/30 overflow-hidden hover:border-zmx-gold transition aspect-square relative bg-zmx-black">
-                <img
-                  src="/stark.png"
-                  alt="Moto électrique Stark Varg"
-                  className="absolute inset-0 w-full h-full object-cover scale-110"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-zmx-black/90 z-10"></div>
-                <div className="absolute inset-0 bg-zmx-gold/10 group-hover:bg-zmx-gold/20 transition z-10"></div>
-                <div className="relative z-20 h-full flex flex-col justify-end p-8">
-                  <h3 className="text-4xl font-display uppercase text-zmx-gold mb-3 group-hover:text-white transition">
-                    ZMX RENT
-                  </h3>
-                  <p className="text-white text-lg mb-4">Location moto électrique Stark Varg</p>
-                  <div className="flex items-center gap-2 text-zmx-gold group-hover:translate-x-2 transition">
-                    <span className="uppercase font-bold">Découvrir</span>
-                    <ChevronRight />
-                  </div>
-                </div>
-              </div>
-            </a>
-
-            <a href="/event" className="group cursor-pointer">
-              <div className="glass-effect border-2 border-zmx-gold/30 overflow-hidden hover:border-zmx-gold transition aspect-square relative">
-                <img
-                  src="/two-riders-sunset.jpg"
-                  alt="Événements ZMX"
-                  className="absolute inset-0 w-full h-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-zmx-black/90 z-10"></div>
-                <div className="absolute inset-0 bg-zmx-gold/10 group-hover:bg-zmx-gold/20 transition z-10"></div>
-                <div className="relative z-20 h-full flex flex-col justify-end p-8">
-                  <h3 className="text-4xl font-display uppercase text-zmx-gold mb-3 group-hover:text-white transition">
-                    ZMX EVENT
-                  </h3>
-                  <p className="text-white text-lg mb-4">Événements sur mesure</p>
-                  <div className="flex items-center gap-2 text-zmx-gold group-hover:translate-x-2 transition">
-                    <span className="uppercase font-bold">Découvrir</span>
-                    <ChevronRight />
-                  </div>
-                </div>
-              </div>
-            </a>
+      <div className="relative z-10 text-center px-6 max-w-5xl">
+        <div className="mb-8 flex justify-center animate-fade-in-up" style={{ animationDelay: '0.1s', opacity: 0 }}>
+          <div className="relative">
+            <Zap className="w-20 h-20 text-zmx-gold animate-lightning" />
+            <div className="absolute -inset-4 bg-zmx-gold/20 blur-2xl rounded-full" />
           </div>
         </div>
-      </section>
 
-      <section className="py-24 bg-gradient-to-b from-gray-900 to-zmx-black" aria-labelledby="booking-heading">
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 id="booking-heading" className="text-5xl md:text-7xl font-display uppercase text-center mb-16">
-            RÉSERVEZ VOTRE <span className="text-zmx-gold">CRÉNEAU</span>
-          </h2>
-          <div className="max-w-5xl mx-auto">
-            <div
-              className="calendly-inline-widget"
-              data-url="https://calendly.com/zelectronsmx"
-              style={{ minWidth: '320px', height: '700px' }}
-            ></div>
-          </div>
-        </div>
-      </section>
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-display uppercase mb-6 leading-[1.05] animate-fade-in-up" style={{ animationDelay: '0.2s', opacity: 0 }}>
+          <span className="block text-white">Louez les meilleures</span>
+          <span className="block text-gradient-gold">motos électriques</span>
+        </h1>
 
-      <section className="py-24 bg-gradient-to-b from-zmx-black to-gray-900" aria-labelledby="electric-heading">
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 id="electric-heading" className="text-5xl md:text-7xl font-display uppercase text-center mb-16">
-            POURQUOI L'<span className="text-zmx-gold">ÉLECTRIQUE</span> ?
-          </h2>
+        <p className="text-lg md:text-2xl text-zmx-gray mb-12 font-light max-w-3xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.4s', opacity: 0 }}>
+          Découvrez les <strong className="text-white font-semibold">Stark VARG</strong> et les <strong className="text-white font-semibold">Torrot Kids</strong> disponibles chez ZMX Rent. Assurance comprise, chargeur fourni, accès piste inclus.
+        </p>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
-            <div className="group hover:scale-105 transition duration-300">
-              <div className="glass-effect border-2 border-zmx-gold/30 p-8 text-center hover:border-zmx-gold transition aspect-square flex flex-col items-center justify-center">
-                <Zap className="w-16 h-16 text-zmx-yellow mb-4 group-hover:animate-lightning" />
-                <h3 className="text-2xl font-display uppercase text-zmx-gold mb-3">BATTERIE</h3>
-                <p className="text-zmx-gray">Autonomie optimale pour des sessions intenses</p>
-              </div>
-            </div>
-
-            <div className="group hover:scale-105 transition duration-300">
-              <div className="glass-effect border-2 border-zmx-gold/30 p-8 text-center hover:border-zmx-gold transition aspect-square flex flex-col items-center justify-center">
-                <Leaf className="w-16 h-16 text-green-400 mb-4 group-hover:rotate-12 transition" />
-                <h3 className="text-2xl font-display uppercase text-zmx-gold mb-3">ZÉRO ÉMISSION</h3>
-                <p className="text-zmx-gray">Respect de l'environnement et du voisinage</p>
-              </div>
-            </div>
-
-            <div className="group hover:scale-105 transition duration-300">
-              <div className="glass-effect border-2 border-zmx-gold/30 p-8 text-center hover:border-zmx-gold transition aspect-square flex flex-col items-center justify-center">
-                <Brain className="w-16 h-16 text-blue-400 mb-4 group-hover:scale-110 transition" />
-                <h3 className="text-2xl font-display uppercase text-zmx-gold mb-3">CONCENTRATION</h3>
-                <p className="text-zmx-gray">Moins de bruit, plus de sensations pures</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="glass-effect border-2 border-zmx-gold p-8 text-center">
-            <p className="text-xl md:text-2xl text-white mb-8">
-              "Moins de bruit, plus de sensations. L'électrique permet de se concentrer sur l'essentiel : <span className="text-zmx-gold font-bold">le pilotage</span>."
-            </p>
-            <div className="flex flex-wrap justify-center gap-12">
-              <div>
-                <div className="text-5xl font-display text-zmx-gold mb-2">0</div>
-                <div className="text-zmx-gray uppercase text-sm">Huile</div>
-              </div>
-              <div>
-                <div className="text-5xl font-display text-zmx-gold mb-2">+20%</div>
-                <div className="text-zmx-gray uppercase text-sm">Focus</div>
-              </div>
-              <div>
-                <div className="text-5xl font-display text-zmx-gold mb-2">-50%</div>
-                <div className="text-zmx-gray uppercase text-sm">Entretien</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-24 bg-gradient-to-b from-gray-900 to-zmx-black" aria-labelledby="testimonials-heading">
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 id="testimonials-heading" className="text-5xl md:text-7xl font-display uppercase text-center mb-16">
-            ILS NOUS FONT <span className="text-zmx-gold">CONFIANCE</span>
-          </h2>
-
-          <div className="relative max-w-4xl mx-auto">
-            <div className="glass-effect border-2 border-zmx-gold p-12 text-center">
-              <div className="flex justify-center gap-1 mb-6">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-8 h-8 fill-zmx-gold text-zmx-gold" />
-                ))}
-              </div>
-              <blockquote className="text-2xl md:text-3xl text-white mb-6 italic">
-                "{testimonials[activeTestimonial].text}"
-              </blockquote>
-              <cite className="text-zmx-gold font-display text-xl not-italic">
-                — {testimonials[activeTestimonial].author}
-              </cite>
-            </div>
-
-            <div className="flex justify-center gap-3 mt-8">
-              {testimonials.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setActiveTestimonial(index)}
-                  className={`w-3 h-3 rounded-full transition ${
-                    index === activeTestimonial ? 'bg-zmx-gold' : 'bg-zmx-gray/30'
-                  }`}
-                  aria-label={`Témoignage ${index + 1}`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-24 bg-gradient-to-b from-zmx-black to-gray-900" aria-labelledby="video-heading">
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 id="video-heading" className="text-5xl md:text-7xl font-display uppercase text-center mb-8">
-            LA RÉVOLUTION <span className="text-zmx-gold">EN IMAGES</span>
-          </h2>
-
-          <p className="text-center text-zmx-gray text-xl mb-12">
-            Première session électrique à Jancigny
-          </p>
-
-          <div className="max-w-4xl mx-auto">
-            <div className="aspect-video bg-zmx-black border-4 border-zmx-gold relative overflow-hidden group cursor-pointer">
-              <img
-                src="/image.png"
-                alt="Vidéo ZMX - Première session électrique"
-                className="absolute inset-0 w-full h-full object-cover"
-                loading="lazy"
-                decoding="async"
-              />
-              <div className="absolute inset-0 bg-zmx-black/30 group-hover:bg-zmx-black/50 transition flex items-center justify-center">
-                <div className="w-20 h-20 bg-zmx-gold rounded-full flex items-center justify-center group-hover:scale-110 transition">
-                  <div className="w-0 h-0 border-t-[12px] border-t-transparent border-l-[20px] border-l-zmx-black border-b-[12px] border-b-transparent ml-1"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-16 text-center">
-            <p className="text-zmx-gray uppercase tracking-wider mb-6">Ils parlent de nous</p>
-            <div className="flex flex-wrap justify-center gap-8 items-center">
-              <div className="glass-effect border border-zmx-gold/30 px-8 py-4">
-                <span className="text-2xl font-display text-zmx-gold">LE BIEN PUBLIC</span>
-              </div>
-              <div className="glass-effect border border-zmx-gold/30 px-8 py-4">
-                <span className="text-2xl font-display text-zmx-gold">MOTO VERTE</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-24 bg-zmx-gold text-zmx-black" aria-labelledby="cta-heading">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 id="cta-heading" className="text-5xl md:text-7xl font-display uppercase mb-6">
-            REJOINS LA COMMUNAUTÉ ZMX
-          </h2>
-          <p className="text-2xl mb-8 font-medium">
-            Essais, stages, compétitions
-          </p>
-          <a href="/park" className="bg-zmx-black text-zmx-gold px-12 py-5 font-bold uppercase text-xl hover:bg-gray-900 transition inline-block">
-            Réserver mon créneau
+        <div className="flex flex-wrap gap-4 justify-center animate-fade-in-up" style={{ animationDelay: '0.6s', opacity: 0 }}>
+          <button
+            onClick={onReserve}
+            className="bg-zmx-gold text-zmx-black px-8 py-4 font-bold uppercase text-lg hover:bg-white transition flex items-center gap-2 group rounded-xl shadow-2xl shadow-zmx-gold/20"
+          >
+            Réserver
+            <ChevronRight className="group-hover:translate-x-1 transition" />
+          </button>
+          <a
+            href="#motos"
+            className="border-2 border-zmx-gold text-zmx-gold px-8 py-4 font-bold uppercase text-lg hover:bg-zmx-gold hover:text-zmx-black transition flex items-center gap-2 rounded-xl"
+          >
+            Découvrir les motos
+            <ArrowRight className="w-5 h-5" />
           </a>
         </div>
-      </section>
+      </div>
 
-      <section id="contact" className="py-24 bg-gradient-to-b from-gray-900 to-zmx-black" aria-labelledby="contact-heading">
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 id="contact-heading" className="text-5xl md:text-7xl font-display uppercase text-center mb-16">
-            <span className="text-zmx-gold">CONTACT</span> & ACCÈS
-          </h2>
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce" aria-hidden="true">
+        <ChevronDown className="w-8 h-8 text-zmx-gold" />
+      </div>
+    </header>
+  );
+}
 
-          <div className="grid md:grid-cols-2 gap-12">
-            <div>
-              <div className="glass-effect border-2 border-zmx-gold/30 p-8 mb-8 aspect-square flex flex-col justify-center">
-                <MapPin className="w-12 h-12 text-zmx-gold mb-4" />
-                <h3 className="text-2xl font-display uppercase text-zmx-gold mb-4">JANCIGNY, CÔTE-D'OR</h3>
-                <p className="text-white text-lg mb-2">35 min de Dijon</p>
-                <p className="text-white text-lg mb-4">25 min de Beaune</p>
-                <p className="text-zmx-gray">Parking gratuit + bornes de recharge disponibles</p>
-              </div>
-            </div>
+interface MotoCardProps {
+  name: string;
+  category: string;
+  image: string;
+  description: string;
+  specs: string[];
+  prices: { label: string; price: string }[];
+  includes: string[];
+  badge?: string;
+  badgeColor?: string;
+  onReserve: () => void;
+  externalLink?: string;
+}
 
-            <div className="glass-effect border-2 border-zmx-gold/30 p-8">
-              <h3 className="text-2xl font-display uppercase text-zmx-gold mb-6">CONTACTEZ-NOUS</h3>
-              <form className="space-y-4">
-                <input
-                  type="text"
-                  placeholder="Nom"
-                  className="w-full bg-white/10 border border-zmx-gold/30 px-4 py-3 text-white placeholder-zmx-gray focus:border-zmx-gold focus:outline-none"
-                />
-                <input
-                  type="email"
-                  placeholder="Email"
-                  className="w-full bg-white/10 border border-zmx-gold/30 px-4 py-3 text-white placeholder-zmx-gray focus:border-zmx-gold focus:outline-none"
-                />
-                <input
-                  type="tel"
-                  placeholder="Téléphone"
-                  className="w-full bg-white/10 border border-zmx-gold/30 px-4 py-3 text-white placeholder-zmx-gray focus:border-zmx-gold focus:outline-none"
-                />
-                <select className="w-full bg-white/10 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none">
-                  <option value="">Service</option>
-                  <option value="park">ZMX Park</option>
-                  <option value="future">ZMX Future</option>
-                  <option value="rent">ZMX Rent</option>
-                </select>
-                <textarea
-                  placeholder="Message"
-                  rows={4}
-                  className="w-full bg-white/10 border border-zmx-gold/30 px-4 py-3 text-white placeholder-zmx-gray focus:border-zmx-gold focus:outline-none resize-none"
-                ></textarea>
-                <button
-                  type="submit"
-                  className="w-full bg-zmx-gold text-zmx-black px-8 py-4 font-bold uppercase hover:bg-white transition"
-                >
-                  Envoyer ma demande
-                </button>
-              </form>
-            </div>
+function MotoCard({ name, category, image, description, specs, prices, includes, badge, badgeColor, onReserve, externalLink }: MotoCardProps) {
+  return (
+    <div className="group relative scroll-reveal">
+      <div className="glass-card border border-zmx-gold/20 rounded-3xl overflow-hidden hover:border-zmx-gold/60 transition-all duration-500 hover:shadow-2xl hover:shadow-zmx-gold/10 hover:-translate-y-2">
+        {badge && (
+          <div className={`absolute top-4 right-4 z-20 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider ${badgeColor || 'bg-zmx-gold text-zmx-black'}`}>
+            {badge}
           </div>
+        )}
 
-          <div className="mt-12 grid md:grid-cols-3 gap-6">
-            <div className="glass-effect border border-zmx-gold/30 p-6 text-center">
-              <Clock className="w-10 h-10 text-zmx-gold mx-auto mb-3" />
-              <h4 className="font-display uppercase text-zmx-gold mb-2">HORAIRES</h4>
-              <p className="text-zmx-gray">Selon saison</p>
-            </div>
-            <div className="glass-effect border border-zmx-gold/30 p-6 text-center">
-              <Calendar className="w-10 h-10 text-zmx-gold mx-auto mb-3" />
-              <h4 className="font-display uppercase text-zmx-gold mb-2">RÉSERVATION</h4>
-              <p className="text-zmx-gray">En ligne 24/7</p>
-            </div>
-            <div className="glass-effect border border-zmx-gold/30 p-6 text-center">
-              <MapPin className="w-10 h-10 text-zmx-gold mx-auto mb-3" />
-              <h4 className="font-display uppercase text-zmx-gold mb-2">ACCÈS</h4>
-              <p className="text-zmx-gray">GPS friendly</p>
-            </div>
+        <div className="relative h-64 overflow-hidden">
+          <img
+            src={image}
+            alt={`Location ${name} - ${category} électrique ZMX Rent`}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+            loading="lazy"
+            decoding="async"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-zmx-black via-zmx-black/30 to-transparent" />
+          <div className="absolute bottom-4 left-6">
+            <span className="text-sm font-bold uppercase tracking-wider text-zmx-gold bg-zmx-black/60 px-3 py-1 rounded-full">
+              {category}
+            </span>
           </div>
         </div>
-      </section>
-      </main>
 
-      <footer className="bg-zmx-black border-t border-zmx-gold/20 py-12" role="contentinfo">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <Zap className="w-8 h-8 text-zmx-gold" />
-                <span className="text-3xl font-display text-zmx-gold">ZMX</span>
-              </div>
-              <p className="text-zmx-gray">
-                Le motocross nouvelle génération en Bourgogne
-              </p>
-            </div>
-            <div>
-              <h4 className="font-display uppercase text-zmx-gold mb-4">UNIVERS</h4>
-              <nav aria-label="Services">
-                <ul className="space-y-2 text-zmx-gray">
-                  <li><a href="#park" className="hover:text-white transition">ZMX Park</a></li>
-                  <li><a href="#future" className="hover:text-white transition">ZMX Future</a></li>
-                  <li><a href="#rent" className="hover:text-white transition">ZMX Rent</a></li>
-                  <li><a href="#event" className="hover:text-white transition">ZMX Event</a></li>
-                </ul>
-              </nav>
-            </div>
-            <div>
-              <h4 className="font-display uppercase text-zmx-gold mb-4">INFORMATIONS</h4>
-              <ul className="space-y-2 text-zmx-gray">
-                <li><a href="#" className="hover:text-white transition">Mentions légales</a></li>
-                <li><a href="#" className="hover:text-white transition">Règlement intérieur</a></li>
-                <li><a href="#" className="hover:text-white transition">Politique de confidentialité</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-display uppercase text-zmx-gold mb-4">CONTACT</h4>
-              <ul className="space-y-2 text-zmx-gray">
-                <li>Jancigny, Côte-d'Or</li>
-                <li>35 min de Dijon</li>
-                <li>contact@zmx.fr</li>
-              </ul>
-            </div>
+        <div className="p-6 space-y-5">
+          <div>
+            <h3 className="text-2xl font-display uppercase text-white mb-2">{name}</h3>
+            <p className="text-zmx-gray text-sm leading-relaxed">{description}</p>
           </div>
-          <div className="border-t border-zmx-gold/20 pt-8 text-center text-zmx-gray">
-            <p>&copy; 2025 ZMX. Tous droits réservés.</p>
+
+          <div className="flex flex-wrap gap-2">
+            {specs.map((spec) => (
+              <span key={spec} className="text-xs bg-white/5 border border-zmx-gold/20 px-3 py-1.5 rounded-full text-zmx-gray">
+                {spec}
+              </span>
+            ))}
           </div>
+
+          {!externalLink && prices.length > 0 && (
+            <div className="space-y-2">
+              {prices.map((p) => (
+                <div key={p.label} className="flex justify-between items-center bg-white/5 px-4 py-2.5 rounded-xl">
+                  <span className="text-zmx-gray text-sm">{p.label}</span>
+                  <span className="text-lg font-bold text-zmx-gold">{p.price}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {externalLink && (
+            <div className="bg-white/5 px-4 py-3 rounded-xl text-center">
+              <p className="text-zmx-gray text-sm mb-3">Tarifs officiels Torrot Rent</p>
+            </div>
+          )}
+
+          <div>
+            <p className="text-xs font-bold uppercase text-zmx-gold/70 mb-2">Le tarif comprend</p>
+            <ul className="space-y-1.5">
+              {includes.map((item) => (
+                <li key={item} className="flex items-center gap-2 text-sm text-zmx-gray">
+                  <span className="text-zmx-green">✓</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {externalLink ? (
+            <a
+              href={externalLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full text-center border-2 border-zmx-gold text-zmx-gold px-6 py-3.5 font-bold uppercase hover:bg-zmx-gold hover:text-zmx-black transition rounded-xl"
+            >
+              Voir les tarifs officiels
+            </a>
+          ) : (
+            <button
+              onClick={onReserve}
+              className="block w-full bg-zmx-gold text-zmx-black px-6 py-3.5 font-bold uppercase hover:bg-white transition rounded-xl"
+            >
+              Réserver
+            </button>
+          )}
         </div>
-      </footer>
+      </div>
     </div>
   );
 }
 
-export default App;
+function MotosSection({ onReserve }: { onReserve: () => void }) {
+  const motos: Omit<MotoCardProps, 'onReserve'>[] = [
+    {
+      name: 'Stark VARG EX 1.2',
+      category: 'Enduro',
+      image: 'https://images.pexels.com/photos/2078074/pexels-photo-2078074.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop',
+      description: "La Stark VARG EX 1.2 2026, l'enduro électrique ultime. Puissance, autonomie et silence pour repousser vos limites.",
+      specs: ['2026', '80 CV', 'Enduro', '6h autonomie'],
+      prices: [
+        { label: 'Demi-journée', price: '150 €' },
+        { label: 'Journée', price: '190 €' },
+        { label: 'Week-end', price: '250 €' },
+      ],
+      includes: ['Assurance', 'Chargeur'],
+      badge: 'Best Seller',
+      badgeColor: 'bg-zmx-gold text-zmx-black',
+    },
+    {
+      name: 'Stark VARG MX',
+      category: 'Motocross',
+      image: 'https://images.pexels.com/photos/2249528/pexels-photo-2249528.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop',
+      description: "La Stark VARG MX pour le motocross pur. Couple instantané, zéro bruit, sensations maximales sur circuit.",
+      specs: ['80 CV', 'Motocross', 'Réglable 10-80cv', '1-2h autonomie'],
+      prices: [
+        { label: 'Heure', price: '20 €' },
+        { label: 'Demi-journée', price: '50 €' },
+        { label: 'Journée', price: '90 €' },
+      ],
+      includes: ['Accès piste'],
+      badge: 'Découverte',
+      badgeColor: 'bg-zmx-green text-zmx-black',
+    },
+    {
+      name: 'Torrot Kids',
+      category: 'Moto enfant',
+      image: 'https://images.pexels.com/photos/296301/pexels-photo-296301.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop',
+      description: "Les motos Torrot Kids pour les jeunes pilotes. Sécurité, plaisir et initiation à l'électrique en toute confiance.",
+      specs: ['Enfant', 'Électrique', 'Sécurisé', 'Puissance adaptée'],
+      prices: [],
+      includes: ['Accompagnement personnalisé', 'Initiation possible'],
+      externalLink: 'https://www.torrotmoto.com/fr/rent',
+    },
+  ];
+
+  return (
+    <section id="motos" className="py-24 md:py-32 bg-gradient-to-b from-zmx-black via-gray-900/50 to-zmx-black" aria-labelledby="motos-heading">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-16 scroll-reveal">
+          <p className="text-zmx-gold font-bold uppercase tracking-widest text-sm mb-4">Notre flotte</p>
+          <h2 id="motos-heading" className="text-4xl md:text-6xl font-display uppercase mb-4">
+            NOS <span className="text-gradient-gold">MOTOS</span>
+          </h2>
+          <p className="text-xl text-zmx-gray max-w-2xl mx-auto">
+            Des motos électriques haute performance pour chaque pilote
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {motos.map((moto) => (
+            <MotoCard key={moto.name} {...moto} onReserve={onReserve} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function WhyRentSection() {
+  const reasons = [
+    { icon: Bike, title: 'Motos neuves', desc: 'Flotte récente entretenue par des professionnels' },
+    { icon: Wrench, title: 'Entretien professionnel', desc: 'Motos vérifiées avant chaque session' },
+    { icon: Battery, title: '100% électrique', desc: 'Zéro émission, zéro compromis' },
+    { icon: VolumeX, title: 'Silencieuses', desc: 'Profitez du pilotage sans nuisance sonore' },
+    { icon: Leaf, title: "Respect de l'environnement", desc: 'Roulez en harmonie avec la nature' },
+    { icon: UserCheck, title: 'Initiation possible', desc: 'Accompagnement pour les débutants' },
+    { icon: Shield, title: 'Assurance comprise sur la EX', desc: 'Roulez l\'esprit tranquille' },
+    { icon: Battery, title: 'Chargeur fourni', desc: 'Rechargez sur le circuit' },
+    { icon: MapPin, title: 'Accès piste inclus sur la MX', desc: 'Circuit MX/SX à disposition' },
+    { icon: Award, title: 'Matériel entretenu', desc: 'Équipements en parfait état' },
+    { icon: Users, title: 'Accompagnement personnalisé', desc: 'Conseils de nos coachs experts' },
+    { icon: ClipboardList, title: 'Réservation rapide', desc: 'Réservez en ligne en 2 minutes' },
+  ];
+
+  return (
+    <section id="why-rent" className="py-24 md:py-32 bg-gradient-to-b from-zmx-black to-gray-900/30" aria-labelledby="why-heading">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-16 scroll-reveal">
+          <p className="text-zmx-gold font-bold uppercase tracking-widest text-sm mb-4">ZMX Rent</p>
+          <h2 id="why-heading" className="text-4xl md:text-6xl font-display uppercase mb-4">
+            POURQUOI LOUER <span className="text-gradient-gold">CHEZ NOUS</span>
+          </h2>
+          <p className="text-xl text-zmx-gray max-w-2xl mx-auto">
+            12 raisons de choisir ZMX Rent pour votre prochaine session
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {reasons.map((reason, i) => (
+            <div
+              key={reason.title}
+              className="scroll-reveal glass-card border border-zmx-gold/15 rounded-2xl p-6 hover:border-zmx-gold/40 transition-all duration-300 hover:-translate-y-1"
+              style={{ transitionDelay: `${i * 30}ms` }}
+            >
+              <div className="w-12 h-12 bg-zmx-gold/10 rounded-xl flex items-center justify-center mb-4 group">
+                <reason.icon className="w-6 h-6 text-zmx-gold" />
+              </div>
+              <h3 className="text-lg font-bold mb-2 text-white">{reason.title}</h3>
+              <p className="text-zmx-gray text-sm leading-relaxed">{reason.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HowItWorksSection({ onReserve }: { onReserve: () => void }) {
+  const steps = [
+    { icon: Bike, title: 'Choisissez votre moto', desc: 'Stark VARG EX, MX ou Torrot Kids' },
+    { icon: CalendarCheck, title: 'Choisissez votre créneau', desc: 'Date et horaire en ligne' },
+    { icon: ClipboardList, title: 'Réservez', desc: 'Confirmation sous 24h' },
+    { icon: Zap, title: 'Venez rouler', desc: 'Moto prête, circuit ouvert' },
+  ];
+
+  return (
+    <section className="py-24 md:py-32 bg-gradient-to-b from-gray-900/30 to-zmx-black" aria-labelledby="how-heading">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-16 scroll-reveal">
+          <p className="text-zmx-gold font-bold uppercase tracking-widest text-sm mb-4">Simple et rapide</p>
+          <h2 id="how-heading" className="text-4xl md:text-6xl font-display uppercase mb-4">
+            COMMENT ÇA <span className="text-gradient-gold">FONCTIONNE</span>
+          </h2>
+        </div>
+
+        <div className="grid md:grid-cols-4 gap-8">
+          {steps.map((step, i) => (
+            <div key={step.title} className="scroll-reveal relative">
+              <div className="glass-card border border-zmx-gold/20 rounded-2xl p-8 text-center hover:border-zmx-gold/50 transition-all duration-300">
+                <div className="w-16 h-16 bg-zmx-gold/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <step.icon className="w-8 h-8 text-zmx-gold" />
+                </div>
+                <div className="text-5xl font-display text-zmx-gold/30 mb-3 absolute top-4 right-6">{i + 1}</div>
+                <h3 className="text-lg font-bold mb-2 text-white">{step.title}</h3>
+                <p className="text-zmx-gray text-sm">{step.desc}</p>
+              </div>
+              {i < steps.length - 1 && (
+                <div className="hidden md:block absolute top-1/2 -right-4 w-8 h-0.5 bg-zmx-gold/20" />
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="text-center mt-12 scroll-reveal">
+          <button
+            onClick={onReserve}
+            className="bg-zmx-gold text-zmx-black px-8 py-4 font-bold uppercase text-lg hover:bg-white transition rounded-xl"
+          >
+            Réserver maintenant
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function GallerySection() {
+  const [lightbox, setLightbox] = useState<string | null>(null);
+
+  const images = [
+    { src: 'https://images.pexels.com/photos/2078074/pexels-photo-2078074.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop', alt: 'Pilote sur moto électrique Stark VARG en enduro' },
+    { src: 'https://images.pexels.com/photos/2249528/pexels-photo-2249528.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop', alt: 'Motocross électrique en action sur circuit ZMX' },
+    { src: 'https://images.pexels.com/photos/296301/pexels-photo-296301.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop', alt: 'Moto électrique enfant Torrot Kids sur circuit' },
+    { src: 'https://images.pexels.com/photos/1190338/pexels-photo-1190338.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop', alt: 'Circuit de motocross électrique ZMX Park' },
+    { src: 'https://images.pexels.com/photos/2422259/pexels-photo-2422259.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop', alt: 'Pilote électrique en saut sur circuit ZMX' },
+    { src: 'https://images.pexels.com/photos/2422249/pexels-photo-2422249.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop', alt: 'Session de coaching moto électrique ZMX Future' },
+  ];
+
+  return (
+    <section className="py-24 md:py-32 bg-gradient-to-b from-zmx-black to-gray-900/30" aria-labelledby="gallery-heading">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-16 scroll-reveal">
+          <p className="text-zmx-gold font-bold uppercase tracking-widest text-sm mb-4">En images</p>
+          <h2 id="gallery-heading" className="text-4xl md:text-6xl font-display uppercase mb-4">
+            <span className="text-gradient-gold">GALERIE</span>
+          </h2>
+          <p className="text-xl text-zmx-gray max-w-2xl mx-auto">
+            La passion de l'électrique en Bourgogne
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {images.map((img, i) => (
+            <div
+              key={i}
+              className={`scroll-reveal group cursor-pointer relative overflow-hidden rounded-2xl ${i === 0 ? 'md:col-span-2 md:row-span-2' : ''}`}
+              onClick={() => setLightbox(img.src)}
+              style={{ transitionDelay: `${i * 50}ms` }}
+            >
+              <img
+                src={img.src}
+                alt={img.alt}
+                className={`w-full ${i === 0 ? 'h-full min-h-[400px]' : 'h-64'} object-cover group-hover:scale-110 transition-transform duration-700`}
+                loading="lazy"
+                decoding="async"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-zmx-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute bottom-0 left-0 p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <p className="text-white text-sm font-medium">{img.alt}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {lightbox && (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center bg-zmx-black/95 backdrop-blur-sm p-6 animate-fade-in"
+          onClick={() => setLightbox(null)}
+        >
+          <button className="absolute top-6 right-6 text-white hover:text-zmx-gold transition" aria-label="Fermer">
+            <X className="w-10 h-10" />
+          </button>
+          <img
+            src={lightbox.replace('w=800&h=600', 'w=1600&h=1200')}
+            alt="Image agrandie"
+            className="max-w-full max-h-full object-contain rounded-2xl"
+          />
+        </div>
+      )}
+    </section>
+  );
+}
+
+function FAQSection() {
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  const faqs = [
+    { q: 'Comment réserver ?', a: "Choisissez votre moto (Stark VARG EX, MX ou Torrot Kids), sélectionnez votre créneau en ligne, remplissez le formulaire de réservation et confirmez. Vous recevez une confirmation sous 24h." },
+    { q: "L'assurance est-elle comprise ?", a: "Oui, l'assurance circuit est comprise dans la location de la Stark VARG EX 1.2. Pour la Stark VARG MX, l'accès piste est inclus." },
+    { q: 'Le chargeur est-il fourni ?', a: "Oui, le chargeur est fourni avec la Stark VARG EX 1.2. Des bornes de recharge sont également disponibles sur le circuit." },
+    { q: 'Faut-il un permis ?', a: "Pour la Stark VARG EX, un permis moto est requis. Pour la Stark VARG MX et les Torrot Kids, aucun permis n'est nécessaire. L'équipement de protection est obligatoire." },
+    { q: 'Quel équipement faut-il ?', a: "Un casque homologué, des gants, des bottes et des protections (dorsale, genouillères) sont obligatoires. Vous pouvez venir avec votre équipement ou en louer sur place." },
+    { q: 'Les enfants peuvent-ils rouler ?', a: "Oui, les enfants peuvent rouler avec les motos Torrot Kids adaptées à leur âge et niveau. La puissance est réglable pour garantir leur sécurité." },
+    { q: "Quelle est l'autonomie ?", a: "La Stark VARG EX offre jusqu'à 6 heures d'autonomie en utilisation enduro. La Stark VARG MX offre environ 1 à 2 heures selon l'intensité." },
+    { q: 'Comment recharger ?', a: "Des bornes de recharge sont disponibles sur le circuit. Le chargeur est fourni avec la Stark VARG EX 1.2. La recharge complète prend 1 à 2 heures." },
+    { q: 'Puis-je venir avec mon équipement ?', a: "Oui, vous pouvez venir avec votre propre équipement. Il doit être homologué et en bon état. Nous vérifions sa conformité avant l'accès au circuit." },
+  ];
+
+  return (
+    <section className="py-24 md:py-32 bg-gradient-to-b from-gray-900/30 to-zmx-black" aria-labelledby="faq-heading">
+      <div className="max-w-3xl mx-auto px-6">
+        <div className="text-center mb-16 scroll-reveal">
+          <p className="text-zmx-gold font-bold uppercase tracking-widest text-sm mb-4">Questions fréquentes</p>
+          <h2 id="faq-heading" className="text-4xl md:text-6xl font-display uppercase mb-4">
+            <span className="text-gradient-gold">FAQ</span>
+          </h2>
+        </div>
+
+        <div className="space-y-4">
+          {faqs.map((faq, i) => (
+            <div key={i} className="scroll-reveal glass-card border border-zmx-gold/15 rounded-2xl overflow-hidden">
+              <button
+                onClick={() => setOpenIndex(openIndex === i ? null : i)}
+                className="w-full px-6 py-5 flex justify-between items-center text-left hover:bg-white/5 transition"
+                aria-expanded={openIndex === i}
+              >
+                <span className="text-lg font-bold text-white pr-4">{faq.q}</span>
+                <ChevronDown className={`w-5 h-5 text-zmx-gold flex-shrink-0 transition-transform duration-300 ${openIndex === i ? 'rotate-180' : ''}`} />
+              </button>
+              <div className={`overflow-hidden transition-all duration-300 ${openIndex === i ? 'max-h-96' : 'max-h-0'}`}>
+                <p className="px-6 pb-5 text-zmx-gray leading-relaxed">{faq.a}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ReviewsSection() {
+  const [active, setActive] = useState(0);
+
+  const reviews = [
+    { text: "Location au top ! La Stark VARG EX est incroyable. Silencieuse, puissante, et l'assurance est comprise. Je reviens la semaine prochaine !", author: "Marc D.", role: "Pilote enduro", rating: 5 },
+    { text: "Première fois sur une électrique. La MX est parfaite pour découvrir, et l'accès piste est inclus. Que demander de plus ?", author: "Sophie L.", role: "Débutante", rating: 5 },
+    { text: "Mes enfants adorent les Torrot Kids. Sécurisé, encadré, et ils progressent vite. ZMX Rent a tout compris.", author: "Thomas R.", role: "Papa pilote", rating: 5 },
+    { text: "Réservation en 2 minutes, moto prête à l'arrivée. Service impeccable, matériel premium. ZMX Rent est une référence.", author: "Julien M.", role: "Pilote amateur", rating: 5 },
+    { text: "Le chargeur est fourni, les bornes sur le circuit, l'autonomie de 6h sur la EX. Tout est pensé pour le pilote.", author: "Alexandre P.", role: "Compétiteur", rating: 5 },
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActive((prev) => (prev + 1) % reviews.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [reviews.length]);
+
+  return (
+    <section className="py-24 md:py-32 bg-gradient-to-b from-zmx-black to-gray-900/30" aria-labelledby="reviews-heading">
+      <div className="max-w-4xl mx-auto px-6">
+        <div className="text-center mb-16 scroll-reveal">
+          <p className="text-zmx-gold font-bold uppercase tracking-widest text-sm mb-4">Ils nous font confiance</p>
+          <h2 id="reviews-heading" className="text-4xl md:text-6xl font-display uppercase mb-4">
+            AVIS <span className="text-gradient-gold">CLIENTS</span>
+          </h2>
+        </div>
+
+        <div className="scroll-reveal relative">
+          <div className="glass-card border border-zmx-gold/20 rounded-3xl p-8 md:p-12 text-center">
+            <div className="flex justify-center gap-1 mb-6">
+              {[...Array(reviews[active].rating)].map((_, i) => (
+                <Star key={i} className="w-7 h-7 fill-zmx-gold text-zmx-gold" />
+              ))}
+            </div>
+            <blockquote className="text-xl md:text-2xl text-white mb-8 italic leading-relaxed">
+              "{reviews[active].text}"
+            </blockquote>
+            <div>
+              <p className="text-zmx-gold font-display text-lg">{reviews[active].author}</p>
+              <p className="text-zmx-gray text-sm">{reviews[active].role}</p>
+            </div>
+          </div>
+
+          <div className="flex justify-center gap-3 mt-8">
+            {reviews.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setActive(i)}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${i === active ? 'bg-zmx-gold w-8' : 'bg-zmx-gray/30'}`}
+                aria-label={`Avis ${i + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CTASection({ onReserve }: { onReserve: () => void }) {
+  return (
+    <section id="cta" className="py-24 md:py-32 relative overflow-hidden">
+      <div className="absolute inset-0">
+        <img
+          src="https://images.pexels.com/photos/1190338/pexels-photo-1190338.jpeg?auto=compress&cs=tinysrgb&w=1920&h=800&fit=crop"
+          alt="Circuit de motocross électrique ZMX Rent"
+          className="w-full h-full object-cover"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-zmx-black via-zmx-black/80 to-zmx-black/60" />
+      </div>
+
+      <div className="relative max-w-4xl mx-auto px-6 text-center scroll-reveal">
+        <h2 className="text-4xl md:text-7xl font-display uppercase mb-6">
+          <span className="block text-white">Prêt à rouler ?</span>
+          <span className="block text-gradient-gold">Réservez votre moto</span>
+          <span className="block text-white">dès aujourd'hui</span>
+        </h2>
+        <p className="text-xl text-zmx-gray mb-10 max-w-2xl mx-auto">
+          Stark VARG EX, MX et Torrot Kids disponibles. Assurance comprise, chargeur fourni, accès piste inclus.
+        </p>
+        <button
+          onClick={onReserve}
+          className="bg-zmx-gold text-zmx-black px-12 py-5 font-bold uppercase text-xl hover:bg-white transition rounded-xl shadow-2xl shadow-zmx-gold/30 inline-flex items-center gap-2 group"
+        >
+          Réserver
+          <ChevronRight className="group-hover:translate-x-1 transition" />
+        </button>
+      </div>
+    </section>
+  );
+}
+
+function Footer() {
+  const rentalLinks = [
+    'Location moto électrique',
+    'Location Stark VARG',
+    'Location motocross',
+    'Location enduro',
+    'Location enfant',
+    'ZMX Rent',
+  ];
+
+  const serviceLinks = [
+    { label: 'ZMX Park', href: '/park' },
+    { label: 'ZMX Future', href: '/future' },
+    { label: 'ZMX Rent', href: '#motos' },
+    { label: 'ZMX Event', href: '/event' },
+  ];
+
+  return (
+    <footer className="bg-zmx-black border-t border-zmx-gold/20 pt-16 pb-8" role="contentinfo">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid md:grid-cols-4 gap-8 mb-12">
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <Zap className="w-8 h-8 text-zmx-gold" />
+              <span className="text-2xl font-display text-zmx-gold">ZMX RENT</span>
+            </div>
+            <p className="text-zmx-gray text-sm leading-relaxed">
+              Le spécialiste de la location de motos électriques en Bourgogne. Stark VARG, Torrot Kids, accès piste et coaching.
+            </p>
+          </div>
+
+          <div>
+            <h4 className="font-display uppercase text-zmx-gold mb-4 text-sm">LOCATION</h4>
+            <nav aria-label="Location">
+              <ul className="space-y-2 text-zmx-gray text-sm">
+                {rentalLinks.map((link) => (
+                  <li key={link}>
+                    <a href="#motos" className="hover:text-zmx-gold transition">{link}</a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+
+          <div>
+            <h4 className="font-display uppercase text-zmx-gold mb-4 text-sm">NOS SERVICES</h4>
+            <nav aria-label="Services">
+              <ul className="space-y-2 text-zmx-gray text-sm">
+                {serviceLinks.map((link) => (
+                  <li key={link.label}>
+                    <a href={link.href} className="hover:text-zmx-gold transition">{link.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+
+          <div>
+            <h4 className="font-display uppercase text-zmx-gold mb-4 text-sm">CONTACT</h4>
+            <ul className="space-y-2 text-zmx-gray text-sm">
+              <li className="flex items-center gap-2"><MapPin className="w-4 h-4 text-zmx-gold" /> Jancigny, Côte-d'Or</li>
+              <li className="flex items-center gap-2"><Clock className="w-4 h-4 text-zmx-gold" /> Mar-Dim selon saison</li>
+              <li className="flex items-center gap-2"><Heart className="w-4 h-4 text-zmx-gold" /> contact@zmxmoto.fr</li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="border-t border-zmx-gold/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-zmx-gray text-sm">&copy; 2025 ZMX Rent. Tous droits réservés.</p>
+          <div className="flex gap-6 text-sm text-zmx-gray">
+            <a href="#" className="hover:text-zmx-gold transition">Mentions légales</a>
+            <a href="#" className="hover:text-zmx-gold transition">Confidentialité</a>
+            <a href="#" className="hover:text-zmx-gold transition">Règlement</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+export default function App() {
+  const [showBooking, setShowBooking] = useState(false);
+  useScrollReveal();
+
+  return (
+    <div className="min-h-screen bg-zmx-black text-white">
+      <StructuredData type="home" />
+      <Navbar />
+      <Hero onReserve={() => setShowBooking(true)} />
+      <main>
+        <MotosSection onReserve={() => setShowBooking(true)} />
+        <WhyRentSection />
+        <HowItWorksSection onReserve={() => setShowBooking(true)} />
+        <GallerySection />
+        <FAQSection />
+        <ReviewsSection />
+        <CTASection onReserve={() => setShowBooking(true)} />
+      </main>
+      <Footer />
+
+      {showBooking && (
+        <BookingCalendar service="rent" onClose={() => setShowBooking(false)} />
+      )}
+    </div>
+  );
+}

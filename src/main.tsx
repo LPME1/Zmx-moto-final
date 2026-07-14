@@ -1,11 +1,11 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
-import App from './App.tsx';
-import ParkPage from './pages/ParkPage.tsx';
-import FuturePage from './pages/FuturePage.tsx';
-import RentPage from './pages/RentPage.tsx';
-import EventPage from './pages/EventPage.tsx';
+import App from './App';
+import ParkPage from './pages/ParkPage';
+import FuturePage from './pages/FuturePage';
+import RentPage from './pages/RentPage';
+import EventPage from './pages/EventPage';
 
 const path = window.location.pathname;
 
