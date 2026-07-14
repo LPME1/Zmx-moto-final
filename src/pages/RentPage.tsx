@@ -96,8 +96,8 @@ export default function RentPage() {
               <div className="glass-card border border-zmx-gold/30 rounded-2xl overflow-hidden group hover:border-zmx-gold/70 transition-all duration-300">
                 <div className="relative overflow-hidden h-56 bg-zmx-black">
                   <img
-                    src="/IMG_5093_(002).jpeg"
-                    alt="Torrot Kids — moto électrique pour enfants de 3 à 10 ans, idéale pour initier les jeunes pilotes au motocross électrique chez ZMX Rent"
+                    src="https://torrot.com/uploads/_CGSmartImage/img-383efa567074ed7601c751786ae90c67-MY26-MX2.jpg"
+                    alt="Torrot Kids MY26 — moto électrique pour enfants de 3 à 10 ans, idéale pour initier les jeunes pilotes au motocross électrique chez ZMX Rent"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
                   />

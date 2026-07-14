@@ -265,7 +265,7 @@ function MotosSection({ onReserve }: { onReserve: () => void }) {
     {
       name: 'Torrot Kids',
       category: 'Moto enfant',
-      image: '/pexels-binyaminmellish-108292.jpg',
+      image: 'https://torrot.com/uploads/_CGSmartImage/img-383efa567074ed7601c751786ae90c67-MY26-MX2.jpg',
       description: "Les motos Torrot Kids pour les jeunes pilotes. Sécurité, plaisir et initiation à l'électrique en toute confiance.",
       specs: ['Enfant', 'Électrique', 'Sécurisé', 'Puissance adaptée'],
       prices: [],
@@ -380,7 +380,7 @@ function GallerySection() {
   const images = [
     { src: '/electric-motocross-rider-jumping.jpg', alt: 'Pilote sur moto électrique Stark VARG en saut' },
     { src: '/two-riders-sunset.jpg', alt: 'Deux pilotes au coucher de soleil sur circuit ZMX' },
-    { src: '/pexels-binyaminmellish-108292.jpg', alt: 'Moto électrique sur circuit ZMX' },
+    { src: 'https://torrot.com/uploads/_CGSmartImage/img-383efa567074ed7601c751786ae90c67-MY26-MX2.jpg', alt: 'Torrot Kids MY26 moto électrique sur circuit ZMX' },
     { src: '/zmx_park.png', alt: 'Vue du circuit ZMX Park' },
     { src: '/zmx_future.png', alt: 'Coaching ZMX Future en action' },
     { src: '/zmx_team.png', alt: "L'équipe ZMX" },
