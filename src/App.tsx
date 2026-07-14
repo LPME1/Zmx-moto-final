@@ -61,7 +61,7 @@ function App() {
             alt="Pilotes de motocross électrique au coucher du soleil"
             className="w-full h-full object-cover"
             loading="eager"
-            fetchpriority="high"
+            fetchPriority="high"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-zmx-black/70 via-zmx-black/50 to-zmx-black/80"></div>
           <div className="absolute inset-0 bg-gradient-to-r from-zmx-black/40 to-transparent"></div>

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Zap, ChevronLeft, Calendar, Users, MapPin, Sparkles, Trophy, Heart, Gift } from 'lucide-react';
+import { Zap, ChevronLeft, Users, MapPin, Sparkles, Trophy, Heart, Gift } from 'lucide-react';
 
 export default function EventPage() {
   useEffect(() => {

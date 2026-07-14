@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Target, TrendingUp, Award, Brain, Zap, ChevronLeft, Clock, Users } from 'lucide-react';
+import { Target, TrendingUp, Award, Brain, Zap, ChevronLeft, Clock } from 'lucide-react';
 import BookingCalendar from '../components/BookingCalendar';
 
 export default function FuturePage() {
