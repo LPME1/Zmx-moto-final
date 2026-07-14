@@ -250,7 +250,7 @@ function MotosSection({ onReserve }: { onReserve: () => void }) {
     {
       name: 'Stark VARG MX',
       category: 'Motocross',
-      image: '/stark.png',
+      image: 'https://assets.starkfuture.com/frontend-assets/varg/mx1.2/red.webp',
       description: "La Stark VARG MX pour le motocross pur. Couple instantané, zéro bruit, sensations maximales sur circuit.",
       specs: ['80 CV', 'Motocross', 'Réglable 10-80cv', '1-2h autonomie'],
       prices: [
