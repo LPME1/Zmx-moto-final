@@ -10,15 +10,10 @@ import EventPage from './pages/EventPage';
 const path = window.location.pathname;
 
 let CurrentPage = App;
-if (path === '/park') {
-  CurrentPage = ParkPage;
-} else if (path === '/future') {
-  CurrentPage = FuturePage;
-} else if (path === '/rent') {
-  CurrentPage = RentPage;
-} else if (path === '/event') {
-  CurrentPage = EventPage;
-}
+if (path === '/park') CurrentPage = ParkPage;
+else if (path === '/future') CurrentPage = FuturePage;
+else if (path === '/rent') CurrentPage = RentPage;
+else if (path === '/event') CurrentPage = EventPage;
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

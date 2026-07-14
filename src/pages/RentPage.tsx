@@ -1,18 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Bike, Calendar, Shield, Wrench, Zap, ChevronLeft } from 'lucide-react';
 import BookingCalendar from '../components/BookingCalendar';
 import StructuredData from '../components/StructuredData';
 
 export default function RentPage() {
   const [showCalendar, setShowCalendar] = useState(false);
-
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://assets.calendly.com/assets/external/widget.js';
-    script.async = true;
-    document.body.appendChild(script);
-    return () => { document.body.removeChild(script); };
-  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-zmx-black to-gray-900 text-white">
@@ -24,32 +16,22 @@ export default function RentPage() {
             <span className="text-3xl font-display text-zmx-gold">ZMX</span>
           </a>
           <a href="/" className="flex items-center gap-2 text-zmx-gray hover:text-zmx-gold transition">
-            <ChevronLeft className="w-5 h-5" />
-            <span>Retour</span>
+            <ChevronLeft className="w-5 h-5" /><span>Retour</span>
           </a>
         </div>
       </nav>
 
       <div className="relative">
         <div className="absolute inset-0 h-[600px]">
-          <img
-            src="https://images.pexels.com/photos/2078074/pexels-photo-2078074.jpeg?auto=compress&cs=tinysrgb&w=1920&h=600&fit=crop"
-            alt="Location moto électrique Stark VARG chez ZMX Rent"
-            className="w-full h-full object-cover"
-            loading="eager"
-          />
+          <img src="/stark.png" alt="Location moto électrique Stark VARG chez ZMX Rent" className="w-full h-full object-cover bg-zmx-black" loading="eager" />
           <div className="absolute inset-0 bg-gradient-to-b from-zmx-black/70 via-zmx-black/60 to-zmx-black" />
         </div>
 
         <div className="relative pt-32 pb-24">
           <div className="max-w-7xl mx-auto px-6">
             <div className="text-center mb-16">
-              <h1 className="text-6xl md:text-8xl font-display uppercase mb-6 drop-shadow-2xl">
-                ZMX <span className="text-zmx-gold">RENT</span>
-              </h1>
-              <p className="text-2xl text-white max-w-3xl mx-auto drop-shadow-lg">
-                Louez une moto électrique pour rouler sur le circuit
-              </p>
+              <h1 className="text-6xl md:text-8xl font-display uppercase mb-6 drop-shadow-2xl">ZMX <span className="text-zmx-gold">RENT</span></h1>
+              <p className="text-2xl text-white max-w-3xl mx-auto drop-shadow-lg">Louez une moto électrique pour rouler sur le circuit</p>
             </div>
           </div>
         </div>
@@ -59,46 +41,21 @@ export default function RentPage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-12 mb-20">
             <div>
-              <img
-                src="https://images.pexels.com/photos/2249528/pexels-photo-2249528.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop"
-                alt="Stark Varg électrique disponible à la location ZMX Rent"
-                className="w-full h-96 object-cover bg-zmx-black border-4 border-zmx-gold rounded-2xl"
-                loading="lazy"
-              />
+              <img src="/electric-motocross-rider-jumping.jpg" alt="Stark Varg électrique disponible à la location ZMX Rent" className="w-full h-96 object-cover bg-zmx-black border-4 border-zmx-gold rounded-2xl" loading="lazy" />
             </div>
             <div className="flex flex-col justify-center">
-              <h2 className="text-4xl font-display uppercase mb-6">
-                Roulez sur le <span className="text-zmx-gold">circuit</span> avec nos motos
-              </h2>
-              <p className="text-lg text-zmx-gray mb-6">
-                Vous n'avez pas de moto électrique ? Vous voulez essayer un modèle différent ?
-                Vous préférez ne pas user votre propre machine ?
-              </p>
-              <p className="text-lg text-zmx-gray mb-8">
-                Avec ZMX Rent, accédez à notre flotte de motos électriques haute performance.
-                Utilisez-les directement sur le circuit ZMX Park. Parfait état garanti, entretien inclus.
-              </p>
+              <h2 className="text-4xl font-display uppercase mb-6">Roulez sur le <span className="text-zmx-gold">circuit</span> avec nos motos</h2>
+              <p className="text-lg text-zmx-gray mb-6">Vous n'avez pas de moto électrique ? Vous voulez essayer un modèle différent ? Vous préférez ne pas user votre propre machine ?</p>
+              <p className="text-lg text-zmx-gray mb-8">Avec ZMX Rent, accédez à notre flotte de motos électriques haute performance. Utilisez-les directement sur le circuit ZMX Park. Parfait état garanti, entretien inclus.</p>
               <div className="flex gap-4">
-                <button
-                  onClick={() => setShowCalendar(true)}
-                  className="bg-zmx-gold text-zmx-black px-8 py-4 font-bold text-xl uppercase hover:bg-white transition rounded-xl"
-                >
-                  Réserver un créneau
-                </button>
-                <a
-                  href="/future"
-                  className="border-2 border-zmx-gold text-zmx-gold px-8 py-4 font-bold text-xl uppercase hover:bg-zmx-gold hover:text-zmx-black transition flex items-center justify-center rounded-xl"
-                >
-                  Découvrir les stages
-                </a>
+                <button onClick={() => setShowCalendar(true)} className="bg-zmx-gold text-zmx-black px-8 py-4 font-bold text-xl uppercase hover:bg-white transition rounded-xl">Réserver un créneau</button>
+                <a href="/future" className="border-2 border-zmx-gold text-zmx-gold px-8 py-4 font-bold text-xl uppercase hover:bg-zmx-gold hover:text-zmx-black transition flex items-center justify-center rounded-xl">Découvrir les stages</a>
               </div>
             </div>
           </div>
 
           <div className="mb-20">
-            <h2 className="text-5xl font-display uppercase text-center mb-12">
-              Ce que vous <span className="text-zmx-gold">gagnez</span>
-            </h2>
+            <h2 className="text-5xl font-display uppercase text-center mb-12">Ce que vous <span className="text-zmx-gold">gagnez</span></h2>
             <div className="grid md:grid-cols-3 gap-8">
               {[
                 { icon: Bike, title: 'Matériel premium', desc: 'Motos électriques haut de gamme. Toujours à jour, toujours en parfait état.' },
@@ -116,9 +73,7 @@ export default function RentPage() {
 
           <div className="glass-effect border border-zmx-gold/50 p-12 text-center rounded-2xl">
             <Wrench className="w-16 h-16 text-zmx-gold mx-auto mb-6" />
-            <h2 className="text-4xl font-display uppercase mb-6">
-              Tarifs <span className="text-zmx-gold">location</span>
-            </h2>
+            <h2 className="text-4xl font-display uppercase mb-6">Tarifs <span className="text-zmx-gold">location</span></h2>
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-8">
               <div className="glass-card border border-zmx-gold/30 p-6 rounded-2xl">
                 <h3 className="text-2xl font-display uppercase mb-3">Demi-journée</h3>
@@ -143,15 +98,8 @@ export default function RentPage() {
                 </ul>
               </div>
             </div>
-            <button
-              onClick={() => setShowCalendar(true)}
-              className="bg-zmx-gold text-zmx-black px-12 py-4 font-bold text-xl uppercase hover:bg-white transition rounded-xl"
-            >
-              Réserver ma moto maintenant
-            </button>
-            <p className="text-zmx-gray mt-6">
-              Caution de 500€ demandée • Permis moto requis • Équipement obligatoire
-            </p>
+            <button onClick={() => setShowCalendar(true)} className="bg-zmx-gold text-zmx-black px-12 py-4 font-bold text-xl uppercase hover:bg-white transition rounded-xl">Réserver ma moto maintenant</button>
+            <p className="text-zmx-gray mt-6">Caution de 500€ demandée · Permis moto requis · Équipement obligatoire</p>
           </div>
         </div>
       </div>

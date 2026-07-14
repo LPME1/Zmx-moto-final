@@ -9,46 +9,30 @@ interface BookingCalendarProps {
 
 export default function BookingCalendar({ service, onClose }: BookingCalendarProps) {
   const [formData, setFormData] = useState({
-    customerName: '',
-    customerEmail: '',
-    customerPhone: '',
-    bookingDate: '',
-    bookingTime: '',
-    duration: '',
-    notes: ''
+    customerName: '', customerEmail: '', customerPhone: '',
+    bookingDate: '', bookingTime: '', duration: '', notes: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
 
-  const timeSlots = [
-    '09:00', '10:00', '11:00', '12:00',
-    '14:00', '15:00', '16:00', '17:00', '18:00'
-  ];
+  const timeSlots = ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
 
   const getDurationOptions = () => {
     switch (service) {
-      case 'park':
-        return ['1 heure', '2 heures'];
-      case 'future':
-        return ['2 heures'];
-      case 'rent':
-        return ['1 jour', '2 jours (weekend)', '7 jours (semaine)'];
-      default:
-        return [];
+      case 'park': return ['1 heure', '2 heures'];
+      case 'future': return ['2 heures'];
+      case 'rent': return ['Demi-journée (150€)', 'Journée (190€)', 'Week-end (250€)'];
+      default: return [];
     }
   };
 
   const getServiceTitle = () => {
     switch (service) {
-      case 'park':
-        return 'ZMX PARK - Session libre';
-      case 'future':
-        return 'ZMX FUTURE - Coaching';
-      case 'rent':
-        return 'ZMX RENT - Location moto';
-      default:
-        return '';
+      case 'park': return 'ZMX PARK — Session libre';
+      case 'future': return 'ZMX FUTURE — Coaching';
+      case 'rent': return 'ZMX RENT — Location moto';
+      default: return '';
     }
   };
 
@@ -64,26 +48,15 @@ export default function BookingCalendar({ service, onClose }: BookingCalendarPro
     }
 
     try {
-      const { error } = await supabase
-        .from('bookings')
-        .insert({
-          service,
-          customer_name: formData.customerName,
-          customer_email: formData.customerEmail,
-          customer_phone: formData.customerPhone,
-          booking_date: formData.bookingDate,
-          booking_time: formData.bookingTime,
-          duration: formData.duration,
-          notes: formData.notes,
-          status: 'pending'
-        });
-
+      const { error } = await supabase.from('bookings').insert({
+        service, customer_name: formData.customerName, customer_email: formData.customerEmail,
+        customer_phone: formData.customerPhone, booking_date: formData.bookingDate,
+        booking_time: formData.bookingTime, duration: formData.duration,
+        notes: formData.notes, status: 'pending'
+      });
       if (error) throw error;
-
       setSubmitSuccess(true);
-      setTimeout(() => {
-        onClose();
-      }, 3000);
+      setTimeout(() => { onClose(); }, 3000);
     } catch {
       setSubmitError('Une erreur est survenue. Veuillez réessayer ou nous contacter directement.');
     } finally {
@@ -107,12 +80,8 @@ export default function BookingCalendar({ service, onClose }: BookingCalendarPro
             </svg>
           </div>
           <h3 className="text-3xl font-display uppercase mb-4 text-zmx-gold">Réservation confirmée !</h3>
-          <p className="text-lg text-zmx-gray mb-2">
-            Merci {formData.customerName} pour votre réservation.
-          </p>
-          <p className="text-zmx-gray">
-            Nous vous contactons sous 24h pour confirmer votre créneau.
-          </p>
+          <p className="text-lg text-zmx-gray mb-2">Merci {formData.customerName} pour votre réservation.</p>
+          <p className="text-zmx-gray">Nous vous contactons sous 24h pour confirmer votre créneau.</p>
         </div>
       </div>
     );
@@ -122,14 +91,8 @@ export default function BookingCalendar({ service, onClose }: BookingCalendarPro
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-zmx-black/90 backdrop-blur-sm p-6 overflow-y-auto">
       <div className="glass-effect border-2 border-zmx-gold max-w-2xl w-full my-8 animate-slide-up rounded-2xl">
         <div className="p-6 border-b border-zmx-gold/30 flex justify-between items-center">
-          <h2 className="text-3xl font-display uppercase text-zmx-gold">
-            {getServiceTitle()}
-          </h2>
-          <button
-            onClick={onClose}
-            className="text-zmx-gray hover:text-zmx-gold transition"
-            aria-label="Fermer"
-          >
+          <h2 className="text-3xl font-display uppercase text-zmx-gold">{getServiceTitle()}</h2>
+          <button onClick={onClose} className="text-zmx-gray hover:text-zmx-gold transition" aria-label="Fermer">
             <X className="w-8 h-8" />
           </button>
         </div>
@@ -137,141 +100,77 @@ export default function BookingCalendar({ service, onClose }: BookingCalendarPro
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <label className="flex items-center gap-2 text-sm font-bold mb-2 text-zmx-gold">
-                <User className="w-4 h-4" />
-                NOM COMPLET *
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.customerName}
+              <label className="flex items-center gap-2 text-sm font-bold mb-2 text-zmx-gold"><User className="w-4 h-4" /> NOM COMPLET *</label>
+              <input type="text" required value={formData.customerName}
                 onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
                 className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none rounded-xl"
-                placeholder="Jean Dupont"
-              />
+                placeholder="Jean Dupont" />
             </div>
-
             <div>
-              <label className="flex items-center gap-2 text-sm font-bold mb-2 text-zmx-gold">
-                <Mail className="w-4 h-4" />
-                EMAIL *
-              </label>
-              <input
-                type="email"
-                required
-                value={formData.customerEmail}
+              <label className="flex items-center gap-2 text-sm font-bold mb-2 text-zmx-gold"><Mail className="w-4 h-4" /> EMAIL *</label>
+              <input type="email" required value={formData.customerEmail}
                 onChange={(e) => setFormData({ ...formData, customerEmail: e.target.value })}
                 className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none rounded-xl"
-                placeholder="jean.dupont@email.com"
-              />
+                placeholder="jean.dupont@email.com" />
             </div>
           </div>
 
           <div>
-            <label className="flex items-center gap-2 text-sm font-bold mb-2 text-zmx-gold">
-              <Phone className="w-4 h-4" />
-              TÉLÉPHONE *
-            </label>
-            <input
-              type="tel"
-              required
-              value={formData.customerPhone}
+            <label className="flex items-center gap-2 text-sm font-bold mb-2 text-zmx-gold"><Phone className="w-4 h-4" /> TÉLÉPHONE *</label>
+            <input type="tel" required value={formData.customerPhone}
               onChange={(e) => setFormData({ ...formData, customerPhone: e.target.value })}
               className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none rounded-xl"
-              placeholder="06 12 34 56 78"
-            />
+              placeholder="06 12 34 56 78" />
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <label className="flex items-center gap-2 text-sm font-bold mb-2 text-zmx-gold">
-                <Calendar className="w-4 h-4" />
-                DATE *
-              </label>
-              <input
-                type="date"
-                required
-                min={getMinDate()}
-                value={formData.bookingDate}
+              <label className="flex items-center gap-2 text-sm font-bold mb-2 text-zmx-gold"><Calendar className="w-4 h-4" /> DATE *</label>
+              <input type="date" required min={getMinDate()} value={formData.bookingDate}
                 onChange={(e) => setFormData({ ...formData, bookingDate: e.target.value })}
-                className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none rounded-xl"
-              />
+                className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none rounded-xl" />
             </div>
-
             <div>
-              <label className="flex items-center gap-2 text-sm font-bold mb-2 text-zmx-gold">
-                <Clock className="w-4 h-4" />
-                HORAIRE *
-              </label>
-              <select
-                required
-                value={formData.bookingTime}
+              <label className="flex items-center gap-2 text-sm font-bold mb-2 text-zmx-gold"><Clock className="w-4 h-4" /> HORAIRE *</label>
+              <select required value={formData.bookingTime}
                 onChange={(e) => setFormData({ ...formData, bookingTime: e.target.value })}
-                className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none rounded-xl"
-              >
+                className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none rounded-xl">
                 <option value="">Choisir un horaire</option>
-                {timeSlots.map((time) => (
-                  <option key={time} value={time}>
-                    {time}
-                  </option>
-                ))}
+                {timeSlots.map((time) => <option key={time} value={time}>{time}</option>)}
               </select>
             </div>
           </div>
 
           <div>
-            <label className="flex items-center gap-2 text-sm font-bold mb-2 text-zmx-gold">
-              <Clock className="w-4 h-4" />
-              DURÉE *
-            </label>
-            <select
-              required
-              value={formData.duration}
+            <label className="flex items-center gap-2 text-sm font-bold mb-2 text-zmx-gold"><Clock className="w-4 h-4" /> DURÉE *</label>
+            <select required value={formData.duration}
               onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-              className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none rounded-xl"
-            >
+              className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none rounded-xl">
               <option value="">Choisir une durée</option>
-              {getDurationOptions().map((duration) => (
-                <option key={duration} value={duration}>
-                  {duration}
-                </option>
-              ))}
+              {getDurationOptions().map((d) => <option key={d} value={d}>{d}</option>)}
             </select>
           </div>
 
           <div>
-            <label className="flex items-center gap-2 text-sm font-bold mb-2 text-zmx-gold">
-              <MessageSquare className="w-4 h-4" />
-              NOTES (optionnel)
-            </label>
-            <textarea
-              value={formData.notes}
+            <label className="flex items-center gap-2 text-sm font-bold mb-2 text-zmx-gold"><MessageSquare className="w-4 h-4" /> NOTES (optionnel)</label>
+            <textarea value={formData.notes}
               onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
               rows={4}
               className="w-full bg-zmx-black/50 border border-zmx-gold/30 px-4 py-3 text-white focus:border-zmx-gold focus:outline-none resize-none rounded-xl"
-              placeholder="Questions, demandes spéciales..."
-            />
+              placeholder="Questions, demandes spéciales..." />
           </div>
 
           {submitError && (
-            <div className="bg-red-500/10 border border-red-500 p-4 text-red-400 rounded-xl">
-              {submitError}
-            </div>
+            <div className="bg-red-500/10 border border-red-500 p-4 text-red-400 rounded-xl">{submitError}</div>
           )}
 
           <div className="flex gap-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 border-2 border-zmx-gold/30 text-white px-6 py-4 font-bold uppercase hover:border-zmx-gold transition rounded-xl"
-            >
+            <button type="button" onClick={onClose}
+              className="flex-1 border-2 border-zmx-gold/30 text-white px-6 py-4 font-bold uppercase hover:border-zmx-gold transition rounded-xl">
               Annuler
             </button>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="flex-1 bg-zmx-gold text-zmx-black px-6 py-4 font-bold uppercase hover:bg-white transition disabled:opacity-50 disabled:cursor-not-allowed rounded-xl"
-            >
+            <button type="submit" disabled={isSubmitting}
+              className="flex-1 bg-zmx-gold text-zmx-black px-6 py-4 font-bold uppercase hover:bg-white transition disabled:opacity-50 disabled:cursor-not-allowed rounded-xl">
               {isSubmitting ? 'Envoi...' : 'Confirmer la réservation'}
             </button>
           </div>

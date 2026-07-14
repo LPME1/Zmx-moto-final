@@ -1,18 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Target, TrendingUp, Award, Brain, Zap, ChevronLeft, Clock } from 'lucide-react';
 import BookingCalendar from '../components/BookingCalendar';
 import StructuredData from '../components/StructuredData';
 
 export default function FuturePage() {
   const [showCalendar, setShowCalendar] = useState(false);
-
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://assets.calendly.com/assets/external/widget.js';
-    script.async = true;
-    document.body.appendChild(script);
-    return () => { document.body.removeChild(script); };
-  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-zmx-black to-gray-900 text-white">
@@ -24,8 +16,7 @@ export default function FuturePage() {
             <span className="text-3xl font-display text-zmx-gold">ZMX</span>
           </a>
           <a href="/" className="flex items-center gap-2 text-zmx-gray hover:text-zmx-gold transition">
-            <ChevronLeft className="w-5 h-5" />
-            <span>Retour</span>
+            <ChevronLeft className="w-5 h-5" /><span>Retour</span>
           </a>
         </div>
       </nav>
@@ -33,43 +24,23 @@ export default function FuturePage() {
       <div className="pt-24 pb-16">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h1 className="text-6xl md:text-8xl font-display uppercase mb-6">
-              ZMX <span className="text-zmx-gold">FUTURE</span>
-            </h1>
-            <p className="text-2xl text-zmx-gray max-w-3xl mx-auto">
-              Coaching haute performance pour atteindre vos objectifs
-            </p>
+            <h1 className="text-6xl md:text-8xl font-display uppercase mb-6">ZMX <span className="text-zmx-gold">FUTURE</span></h1>
+            <p className="text-2xl text-zmx-gray max-w-3xl mx-auto">Coaching haute performance pour atteindre vos objectifs</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-12 mb-20">
             <div>
-              <img
-                src="https://images.pexels.com/photos/2422259/pexels-photo-2422259.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop"
-                alt="Coach ZMX Future au bord de la piste"
-                className="w-full h-96 object-cover border-4 border-zmx-gold rounded-2xl"
-                loading="lazy"
-              />
+              <img src="/zmx_future.png" alt="Coach ZMX Future au bord de la piste" className="w-full h-96 object-cover border-4 border-zmx-gold rounded-2xl" loading="lazy" />
             </div>
             <div className="flex flex-col justify-center">
-              <h2 className="text-4xl font-display uppercase mb-6">
-                Passez au <span className="text-zmx-gold">niveau supérieur</span>
-              </h2>
-              <p className="text-lg text-zmx-gray mb-6">
-                Nos coachs experts vous débloquent en quelques sessions ce qui vous aurait pris des années seul.
-              </p>
-              <button
-                onClick={() => setShowCalendar(true)}
-                className="bg-zmx-gold text-zmx-black px-8 py-4 font-bold text-xl uppercase hover:bg-white transition self-start rounded-xl"
-              >
-                Réserver mon coaching
-              </button>
+              <h2 className="text-4xl font-display uppercase mb-6">Passez au <span className="text-zmx-gold">niveau supérieur</span></h2>
+              <p className="text-lg text-zmx-gray mb-6">Nos coachs experts vous débloquent en quelques sessions ce qui vous aurait pris des années seul.</p>
+              <button onClick={() => setShowCalendar(true)} className="bg-zmx-gold text-zmx-black px-8 py-4 font-bold text-xl uppercase hover:bg-white transition self-start rounded-xl">Réserver mon coaching</button>
             </div>
           </div>
 
           <div className="mb-20">
-            <h2 className="text-5xl font-display uppercase text-center mb-12">
-              Ce que vous <span className="text-zmx-gold">débloquez</span>
-            </h2>
+            <h2 className="text-5xl font-display uppercase text-center mb-12">Ce que vous <span className="text-zmx-gold">débloquez</span></h2>
             <div className="grid md:grid-cols-3 gap-8">
               {[
                 { icon: Target, title: 'Précision chirurgicale', desc: "L'électrique permet une précision impossible avec une thermique." },
@@ -87,9 +58,7 @@ export default function FuturePage() {
 
           <div className="glass-effect border border-zmx-gold/50 p-12 text-center rounded-2xl">
             <Award className="w-16 h-16 text-zmx-gold mx-auto mb-6" />
-            <h2 className="text-4xl font-display uppercase mb-6">
-              Formules <span className="text-zmx-gold">coaching</span>
-            </h2>
+            <h2 className="text-4xl font-display uppercase mb-6">Formules <span className="text-zmx-gold">coaching</span></h2>
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto mb-8">
               {[
                 { title: 'Découverte', price: '149€', sub: '1 session de 2h', features: ['Analyse de votre niveau', 'Identification des axes', '1 vidéo débriefing', 'Plan personnalisé'] },
