@@ -235,7 +235,7 @@ function MotosSection({ onReserve }: { onReserve: () => void }) {
     {
       name: 'Stark VARG EX 1.2',
       category: 'Enduro',
-      image: '/stark.png',
+      image: 'https://assets.starkfuture.com/frontend-assets/varg/ex/white.webp',
       description: "La Stark VARG EX 1.2 2026, l'enduro électrique ultime. Puissance, autonomie et silence pour repousser vos limites.",
       specs: ['2026', '80 CV', 'Enduro', '6h autonomie'],
       prices: [
@@ -250,7 +250,7 @@ function MotosSection({ onReserve }: { onReserve: () => void }) {
     {
       name: 'Stark VARG MX',
       category: 'Motocross',
-      image: '/electric-motocross-rider-jumping.jpg',
+      image: '/stark.png',
       description: "La Stark VARG MX pour le motocross pur. Couple instantané, zéro bruit, sensations maximales sur circuit.",
       specs: ['80 CV', 'Motocross', 'Réglable 10-80cv', '1-2h autonomie'],
       prices: [
